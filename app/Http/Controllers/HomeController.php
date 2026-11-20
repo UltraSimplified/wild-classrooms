@@ -65,8 +65,6 @@ class HomeController extends Controller
                     'latitude' => $group->latitude,
                     'longitude' => $group->longitude,
                 ])->all(),
-
-            'mapsKey' => config('services.google_maps.key'),
         ]);
     }
 }

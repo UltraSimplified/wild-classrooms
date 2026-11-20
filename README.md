@@ -81,8 +81,5 @@ fidelity but are effectively unused and are candidates for removal.
 - `NOVA_ADMIN_EMAILS` — comma-separated staff emails allowed into Nova outside
   local. An empty value admits nobody. These were previously hardcoded in
   `NovaServiceProvider`.
-- `GOOGLE_MAPS_API_KEY` — necessarily visible in page source, so **restrict it
-  by HTTP referrer** in the Google Cloud Console. That is the only real
-  protection for a Maps key.
 - `LETTR_API_KEY` — Lettr refuses a From address whose domain is not verified in
   the Lettr account, so `MAIL_FROM_ADDRESS` must be on a verified domain.

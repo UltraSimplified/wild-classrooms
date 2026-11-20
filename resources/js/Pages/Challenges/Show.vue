@@ -3,9 +3,10 @@ import { Head, Link, usePage } from '@inertiajs/vue3';
 import { computed } from 'vue';
 
 import MediaImage from '@/Components/MediaImage.vue';
+import SpottingMap from '@/Components/SpottingMap.vue';
 import SpottingPhoto from '@/Components/SpottingPhoto.vue';
 import SiteLayout from '@/Layouts/SiteLayout.vue';
-import type { PageProps } from '@/types';
+import type { MapPoint, PageProps } from '@/types';
 
 interface Challenge {
     id: number;
@@ -31,6 +32,15 @@ const props = defineProps<{
         location: string | null;
         group: string | null;
         spottedAt: string | null;
+    }[];
+    mapPoints: MapPoint[];
+    journal: {
+        id: number;
+        spottedAt: string | null;
+        location: string | null;
+        owner: string | null;
+        group: string | null;
+        notes: string | null;
     }[];
 }>();
 
@@ -123,6 +133,61 @@ const monthName = computed((): string | null =>
                 />
             </div>
         </section>
+        <section v-if="props.mapPoints.length" class="mt-16">
+            <h2 class="u-display text-step-2 border-bark/30 border-b pb-2">
+                Where we've found {{ props.challenge.plural ?? props.challenge.title }}
+            </h2>
+            <SpottingMap
+                :points="props.mapPoints"
+                :label="`Map of where ${props.challenge.plural ?? props.challenge.title} have been spotted`"
+                class="mt-6"
+            />
+        </section>
+
+        <!--
+            The journal is the only place a spotting without a photo is ever
+            seen: the grid above shows gallery entries with a picture, which on
+            some species is two records out of twelve.
+        -->
+        <section v-if="props.journal.length" class="mt-16">
+            <h2 class="u-display text-step-2 border-bark/30 border-b pb-2">
+                {{ props.challenge.title }} spottings journal
+                <span class="text-ink-soft text-step-0">({{ props.journal.length }} seen)</span>
+            </h2>
+
+            <div class="mt-6 overflow-x-auto">
+                <table class="w-full min-w-[36rem] border-collapse text-left">
+                    <thead>
+                        <tr class="border-bark/30 text-step--1 text-ink-soft border-b">
+                            <th scope="col" class="py-2 pr-4 font-bold">Last seen</th>
+                            <th scope="col" class="py-2 pr-4 font-bold">Location</th>
+                            <th scope="col" class="py-2 pr-4 font-bold">Spotted by</th>
+                            <th scope="col" class="py-2 pr-4 font-bold">Group</th>
+                            <th scope="col" class="py-2 font-bold">Notes</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr
+                            v-for="entry in props.journal"
+                            :key="entry.id"
+                            class="border-bark/30 border-b"
+                        >
+                            <td class="py-2 pr-4 whitespace-nowrap">{{ entry.spottedAt }}</td>
+                            <td class="py-2 pr-4">{{ entry.location }}</td>
+                            <td class="py-2 pr-4">{{ entry.owner }}</td>
+                            <td class="py-2 pr-4">{{ entry.group }}</td>
+                            <td class="py-2">{{ entry.notes }}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <p v-if="props.challenge.month" class="mt-12">
+            <Link :href="`/month/${props.challenge.month}`" class="hover:text-leaf underline">
+                &larr; Other things to look for this month
+            </Link>
+        </p>
     </SiteLayout>
 </template>
 

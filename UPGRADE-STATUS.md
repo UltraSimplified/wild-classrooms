@@ -202,9 +202,12 @@ copy has real foreign keys where production has none.
 
 - **Rotate the live secrets** in the old repository's history. See
   `SECRETS-ROTATION.md` there, and add the What3Words key to that list.
-  Starting this repo with clean history does not undo the exposure.
+  Starting this repo with clean history does not undo the exposure. The Google
+  Maps key is the one entry that can be **revoked outright** rather than
+  replaced: since the move to Leaflet nothing in this application asks for it,
+  so there is no working value to put back.
 - **Set the new env values**: `NOVA_ADMIN_EMAILS`, `STAFF_NOTIFICATION_EMAILS`,
-  `LETTR_API_KEY`, `GOOGLE_MAPS_API_KEY`.
+  `LETTR_API_KEY`.
 - **Set `APP_URL` to the real hostname.** The public disk derives its URL from
   it (`rtrim(env('APP_URL', 'http://localhost'), '/').'/storage'`), and Nova's
   `Image` fields render *absolute* URLs from that disk. Leave it unset and
@@ -238,10 +241,18 @@ copy has real foreign keys where production has none.
   ```bash
   php artisan view:clear && npm run build
   ```
-- **A map on the home page.** The old site used Google Maps with the key
-  pasted into the template. The data is passed to the page but not yet
-  plotted; Leaflet with OpenStreetMap would remove the Google dependency
-  entirely.
+- **A map on the home page.** The species pages now plot their spottings with
+  Leaflet on OpenStreetMap, so the dependency and a reusable component
+  (`resources/js/Components/SpottingMap.vue`) are already here. `HomeController`
+  still sends `mapGroups`, and `Home.vue` types it as `{id, title, slug}` —
+  dropping the latitude and longitude it is given. Widening that type and
+  reusing SpottingMap is the whole job.
+- **Decide what the journal should show.** It lists `Last seen`, `Location`,
+  `Spotted by` and `Notes` for every record, which is what the live site has
+  always published — so this restores parity rather than exposing anything new.
+  It is still a children's site publishing first names alongside places, and
+  `soved/laravel-gdpr` is installed, so it is worth a deliberate decision
+  rather than an inherited one.
 - **Browser tests.** `pest-plugin-browser` is installed but unused.
 - **The woodland page makes two image requests per member** (tree and sign), so
   a ten-member group is twenty requests. They carry a five-minute cache header;

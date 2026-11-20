@@ -4,21 +4,6 @@ return [
 
     /*
     |--------------------------------------------------------------------------
-    | Google Maps
-    |--------------------------------------------------------------------------
-    |
-    | A Maps browser key is necessarily visible in page source, so restrict it
-    | by HTTP referrer in the Google Cloud Console. The old site pasted this
-    | key directly into three Blade templates.
-    |
-    */
-
-    'google_maps' => [
-        'key' => env('GOOGLE_MAPS_API_KEY'),
-    ],
-
-    /*
-    |--------------------------------------------------------------------------
     | Staff Notifications
     |--------------------------------------------------------------------------
     |

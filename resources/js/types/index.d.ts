@@ -33,3 +33,12 @@ export interface PageProps {
     };
     [key: string]: unknown;
 }
+
+export interface MapPoint {
+    id: number;
+    latitude: number;
+    longitude: number;
+    picture: string | null;
+    notes: string | null;
+    spottedAt: string | null;
+}
