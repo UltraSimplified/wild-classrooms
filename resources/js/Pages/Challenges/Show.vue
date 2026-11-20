@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { Head, Link, usePage } from '@inertiajs/vue3';
+import { computed } from 'vue';
 
 import MediaImage from '@/Components/MediaImage.vue';
 import SpottingPhoto from '@/Components/SpottingPhoto.vue';
@@ -34,54 +35,79 @@ const props = defineProps<{
 }>();
 
 const page = usePage<PageProps>();
+
+// Built the same way as Challenges/Month.vue, so the two pages name months alike.
+const monthName = computed((): string | null =>
+    props.challenge.month
+        ? new Date(2000, props.challenge.month - 1, 1).toLocaleString('en-GB', { month: 'long' })
+        : null,
+);
 </script>
 
 <template>
     <Head :title="props.challenge.title" />
 
     <SiteLayout>
-        <article class="grid gap-10 md:grid-cols-5">
-            <div class="md:col-span-2">
+        <article>
+            <header class="mb-6">
+                <h1 class="u-display text-step-3 sm:text-step-4">{{ props.challenge.title }}</h1>
+                <p v-if="props.challenge.category" class="text-ink-soft mt-1">
+                    {{ props.challenge.category }}
+                </p>
+            </header>
+
+            <!--
+                The photograph is the point of a species page, so it runs the full
+                width of the container. The crop widens with the screen: a 16/6
+                band on a phone would show almost nothing of the subject.
+            -->
+            <figure>
                 <MediaImage
                     :src="props.challenge.image"
                     :alt="props.challenge.imageName ?? props.challenge.title"
-                    class="border-bark/30 w-full border"
+                    class="border-bark/30 aspect-4/3 w-full border object-cover sm:aspect-2/1 lg:aspect-16/6"
                     loading="eager"
                 />
-                <p v-if="props.challenge.credit" class="text-step--1 text-ink-soft mt-2">
+                <figcaption v-if="props.challenge.credit" class="text-step--1 text-ink-soft mt-2">
                     Photo by {{ props.challenge.credit }}
-                </p>
-            </div>
+                </figcaption>
+            </figure>
 
-            <div class="md:col-span-3">
-                <h1 class="u-display text-step-3">{{ props.challenge.title }}</h1>
-                <p v-if="props.challenge.category" class="text-ink-soft">
-                    {{ props.challenge.category }}
-                </p>
+            <div class="mt-10 grid gap-10 lg:grid-cols-3">
+                <div class="lg:col-span-2">
+                    <p v-if="props.challenge.teaser" class="text-step-1 mb-5">
+                        {{ props.challenge.teaser }}
+                    </p>
 
-                <p v-if="props.challenge.teaser" class="text-step-1 mt-4">
-                    {{ props.challenge.teaser }}
-                </p>
+                    <!-- Nova stores these as Trix HTML. -->
+                    <div
+                        v-if="props.challenge.description"
+                        class="prose-wc"
+                        v-html="props.challenge.description"
+                    />
+                </div>
 
-                <!-- Nova stores these as Trix HTML. -->
-                <div
-                    v-if="props.challenge.description"
-                    class="prose-wc mt-5"
-                    v-html="props.challenge.description"
-                />
-
-                <section v-if="props.challenge.whereToFindThem" class="mt-6">
+                <aside class="border-bark/30 bg-parchment-deep/40 h-fit border p-5">
                     <h2 class="u-display text-step-1">Where to find them</h2>
-                    <p class="mt-1">{{ props.challenge.whereToFindThem }}</p>
-                </section>
+                    <p v-if="props.challenge.whereToFindThem" class="mt-2">
+                        {{ props.challenge.whereToFindThem }}
+                    </p>
 
-                <Link
-                    v-if="page.props.auth.group"
-                    :href="`/spottings/add/${props.challenge.id}`"
-                    class="bg-berry hover:bg-berry-bright text-parchment mt-7 inline-block px-5 py-3 font-bold"
-                >
-                    I spotted {{ props.challenge.plural ?? 'this' }}
-                </Link>
+                    <p
+                        v-if="monthName"
+                        class="border-bark/30 text-step--1 text-ink-soft mt-4 border-t pt-4"
+                    >
+                        Look for it in {{ monthName }}.
+                    </p>
+
+                    <Link
+                        v-if="page.props.auth.group"
+                        :href="`/spottings/add/${props.challenge.id}`"
+                        class="bg-berry hover:bg-berry-bright text-parchment mt-5 block px-5 py-3 text-center font-bold"
+                    >
+                        I spotted {{ props.challenge.plural ?? 'this' }}
+                    </Link>
+                </aside>
             </div>
         </article>
 
