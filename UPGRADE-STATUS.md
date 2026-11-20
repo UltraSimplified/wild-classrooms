@@ -135,6 +135,29 @@ covered by tests in `tests/Feature/AuthorizationTest.php`.
   page. The new pages use no icon font.
 - **The third-party cookie-reporting script** on the cookie policy page.
 
+## Before this goes live: repair the text encoding
+
+**The production database will blank the new site until this is run.**
+
+Content pasted from Word over the years was stored as Windows-1252 in UTF-8
+columns, so a curly apostrophe is a lone `0x92` byte rather than the three
+bytes UTF-8 needs. "Old Man’s Beard" is the obvious one. There are 90 such
+values: 52 in challenges, 26 in spottings, 9 in posts, 2 in units, 1 in groups.
+
+The old Blade site rendered them as a replacement character, so it looked like
+a typo. Inertia cannot survive them: `json_encode` refuses invalid UTF-8, the
+page object comes through empty, and the Vue app fails to mount — a blank
+page, not a broken character.
+
+```bash
+php artisan app:repair-text-encoding --dry-run   # report
+php artisan app:repair-text-encoding             # apply
+```
+
+Safe to run more than once, and it only touches values that are already
+invalid. Worth running against production regardless of this port: those
+characters are wrong on the live site today.
+
 ## Still to do
 
 - **Rotate the live secrets** in the old repository's history. See
