@@ -205,6 +205,20 @@ copy has real foreign keys where production has none.
   Starting this repo with clean history does not undo the exposure.
 - **Set the new env values**: `NOVA_ADMIN_EMAILS`, `STAFF_NOTIFICATION_EMAILS`,
   `LETTR_API_KEY`, `GOOGLE_MAPS_API_KEY`.
+- **Set `APP_URL` to the real hostname.** The public disk derives its URL from
+  it (`rtrim(env('APP_URL', 'http://localhost'), '/').'/storage'`), and Nova's
+  `Image` fields render *absolute* URLs from that disk. Leave it unset and
+  every thumbnail in Nova is requested from `http://localhost/storage/...`,
+  which on an https page makes the browser ask to reach the local network. The
+  site's own pages do not show this, because `MediaUrl` returns root-relative
+  paths — so it appears in Nova first. Check it on the server with:
+
+  ```bash
+  php artisan tinker --execute='echo Storage::disk("public")->url("x.jpg");'
+  ```
+
+  After changing it, `php artisan config:clear` (and `config:cache` again if
+  the config is cached).
 - **Check the production migration.** The consolidated migration returns early
   when `spottings` exists, so it is a no-op there, but Nova 5 adds two Fortify
   migrations (two-factor columns on `users`, a `passkeys` table). Both are
