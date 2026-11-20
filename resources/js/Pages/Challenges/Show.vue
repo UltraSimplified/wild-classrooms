@@ -2,11 +2,12 @@
 import { Head, Link, usePage } from '@inertiajs/vue3';
 import { computed } from 'vue';
 
+import AdjacentSpecies from '@/Components/AdjacentSpecies.vue';
 import MediaImage from '@/Components/MediaImage.vue';
 import SpottingMap from '@/Components/SpottingMap.vue';
 import SpottingPhoto from '@/Components/SpottingPhoto.vue';
 import SiteLayout from '@/Layouts/SiteLayout.vue';
-import type { MapPoint, PageProps } from '@/types';
+import type { MapPoint, PageProps, SpeciesLink } from '@/types';
 
 interface Challenge {
     id: number;
@@ -42,6 +43,10 @@ const props = defineProps<{
         group: string | null;
         notes: string | null;
     }[];
+    adjacent: {
+        previous: SpeciesLink | null;
+        next: SpeciesLink | null;
+    };
 }>();
 
 const page = usePage<PageProps>();
@@ -183,11 +188,7 @@ const monthName = computed((): string | null =>
             </div>
         </section>
 
-        <p v-if="props.challenge.month" class="mt-12">
-            <Link :href="`/month/${props.challenge.month}`" class="hover:text-leaf underline">
-                &larr; Other things to look for this month
-            </Link>
-        </p>
+        <AdjacentSpecies :previous="props.adjacent.previous" :next="props.adjacent.next" />
     </SiteLayout>
 </template>
 

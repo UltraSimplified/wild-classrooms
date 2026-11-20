@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use App\Models\Category;
 use App\Models\Challenge;
 use App\Models\Spotting;
 use Illuminate\Support\Facades\DB;
@@ -98,5 +99,90 @@ it('puts the most recent spotting at the top of the journal', function (): void 
         ->assertInertia(fn (Assert $page) => $page
             ->where('journal.0.owner', 'Newer')
             ->where('journal.1.owner', 'Older')
+        );
+});
+
+/*
+ * Stepping sideways through a month. The order is category_id then id, which
+ * is what the month page itself lists, so the two cannot disagree.
+ */
+
+/** @return array<string, Challenge> three November species, in listing order */
+function novemberRow(): array
+{
+    $categories = Category::factory()->count(3)->create();
+
+    return [
+        'first' => Challenge::factory()->create([
+            'month' => 11, 'category_id' => $categories[0]->id, 'title' => 'Field Maple',
+        ]),
+        'middle' => Challenge::factory()->create([
+            'month' => 11, 'category_id' => $categories[1]->id, 'title' => 'Starling',
+        ]),
+        'last' => Challenge::factory()->create([
+            'month' => 11, 'category_id' => $categories[2]->id, 'title' => 'Red Admiral',
+        ]),
+    ];
+}
+
+it('offers the species either side of this one in the month', function (): void {
+    $row = novemberRow();
+
+    // A December species must not leak into November's sequence.
+    Challenge::factory()->create(['month' => 12, 'title' => 'Holly']);
+
+    $this->get(route('challenges.show', $row['middle']))
+        ->assertOk()
+        ->assertInertia(fn (Assert $page) => $page
+            ->where('adjacent.previous.title', 'Field Maple')
+            ->where('adjacent.previous.slug', 'field-maple')
+            ->where('adjacent.next.title', 'Red Admiral')
+        );
+});
+
+it('wraps from the first species back round to the last', function (): void {
+    $row = novemberRow();
+
+    $this->get(route('challenges.show', $row['first']))
+        ->assertOk()
+        ->assertInertia(fn (Assert $page) => $page
+            ->where('adjacent.previous.title', 'Red Admiral')
+            ->where('adjacent.next.title', 'Starling')
+        );
+});
+
+it('wraps from the last species round to the first', function (): void {
+    $row = novemberRow();
+
+    $this->get(route('challenges.show', $row['last']))
+        ->assertOk()
+        ->assertInertia(fn (Assert $page) => $page
+            ->where('adjacent.previous.title', 'Starling')
+            ->where('adjacent.next.title', 'Field Maple')
+        );
+});
+
+it('gives the only species in a month nothing to step to', function (): void {
+    // A loop of one would point at itself on both sides.
+    $alone = Challenge::factory()->create(['month' => 7, 'title' => 'Dog Rose']);
+
+    $this->get(route('challenges.show', $alone))
+        ->assertOk()
+        ->assertInertia(fn (Assert $page) => $page
+            ->where('adjacent.previous', null)
+            ->where('adjacent.next', null)
+        );
+});
+
+it('gives a challenge with no month no neighbours at all', function (): void {
+    // "Wild spotting" is the live example: it belongs to no month, so it is
+    // not part of the year's sequence and has nothing to step to.
+    $loose = Challenge::factory()->create(['month' => null, 'title' => 'Wild spotting']);
+
+    $this->get(route('challenges.show', $loose))
+        ->assertOk()
+        ->assertInertia(fn (Assert $page) => $page
+            ->where('adjacent.previous', null)
+            ->where('adjacent.next', null)
         );
 });

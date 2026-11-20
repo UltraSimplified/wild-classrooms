@@ -42,3 +42,10 @@ export interface MapPoint {
     notes: string | null;
     spottedAt: string | null;
 }
+
+export interface SpeciesLink {
+    id: number;
+    title: string;
+    slug: string;
+    image: string | null;
+}

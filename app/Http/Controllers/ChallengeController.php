@@ -47,6 +47,7 @@ class ChallengeController extends Controller
                     ->with('category')
                     ->where('month', $month)
                     ->orderBy('category_id')
+                    ->orderBy('id')
                     ->get()
             ),
         ]);
@@ -117,7 +118,62 @@ class ChallengeController extends Controller
                     'group' => $spotting->unit?->group?->title,
                     'notes' => $spotting->notes,
                 ])->all(),
+            'adjacent' => $this->adjacent($challenge),
         ]);
+    }
+
+    /**
+     * The species either side of this one within its month, in the order the
+     * month page lists them. The month is a loop: the last one's next is the
+     * first, so a reader can go round the five without hitting a dead end. A
+     * challenge with no month is not part of the year's sequence, and a month
+     * holding only one species has nowhere to step to.
+     *
+     * @return array{previous: array<string, mixed>|null, next: array<string, mixed>|null}
+     */
+    private function adjacent(Challenge $challenge): array
+    {
+        $none = ['previous' => null, 'next' => null];
+
+        if ($challenge->month === null) {
+            return $none;
+        }
+
+        $month = Challenge::query()
+            ->where('month', $challenge->month)
+            ->orderBy('category_id')
+            ->orderBy('id')
+            ->get();
+
+        $position = $month->search(
+            fn (Challenge $sibling): bool => $sibling->getKey() === $challenge->getKey()
+        );
+
+        $count = $month->count();
+
+        if (! is_int($position) || $count < 2) {
+            return $none;
+        }
+
+        return [
+            'previous' => $this->neighbour($month->get(($position - 1 + $count) % $count)),
+            'next' => $this->neighbour($month->get(($position + 1) % $count)),
+        ];
+    }
+
+    /** @return array<string, mixed>|null */
+    private function neighbour(?Challenge $challenge): ?array
+    {
+        if ($challenge === null) {
+            return null;
+        }
+
+        return [
+            'id' => $challenge->getKey(),
+            'title' => $challenge->title,
+            'slug' => str((string) $challenge->title)->slug()->value(),
+            'image' => MediaUrl::resolve($challenge->image),
+        ];
     }
 
     /**
