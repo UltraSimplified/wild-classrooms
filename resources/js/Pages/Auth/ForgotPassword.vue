@@ -37,7 +37,7 @@ const submit = () => form.post('/forgot-password');
 
             <button
                 type="submit"
-                class="bg-berry hover:bg-berry-bright px-5 py-3 font-bold text-parchment disabled:opacity-60"
+                class="bg-berry hover:bg-berry-bright text-parchment px-5 py-3 font-bold disabled:opacity-60"
                 :disabled="form.processing"
             >
                 {{ form.processing ? 'Sending…' : 'Send the link' }}

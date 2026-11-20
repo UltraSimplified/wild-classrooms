@@ -33,7 +33,8 @@ const props = defineProps<{
         <header class="mb-8">
             <h1 class="u-display text-step-3 sm:text-step-4">{{ props.group.title }}</h1>
             <p v-if="props.group.city" class="text-ink-soft">
-                {{ props.group.city }}<template v-if="props.group.county">, {{ props.group.county }}</template>
+                {{ props.group.city
+                }}<template v-if="props.group.county">, {{ props.group.county }}</template>
             </p>
             <div
                 v-if="props.group.description"
@@ -90,14 +91,14 @@ const props = defineProps<{
 
             <p v-if="!props.members.length" class="text-step-1 mt-6">
                 No members yet.
-                <Link v-if="props.isMyGroup" href="/profile/edit" class="underline hover:text-leaf">
+                <Link v-if="props.isMyGroup" href="/profile/edit" class="hover:text-leaf underline">
                     Add some.
                 </Link>
             </p>
         </section>
 
         <p v-if="props.isMyGroup" class="mt-12">
-            <Link href="/profile/edit" class="underline hover:text-leaf">
+            <Link href="/profile/edit" class="hover:text-leaf underline">
                 Edit your group and members
             </Link>
         </p>

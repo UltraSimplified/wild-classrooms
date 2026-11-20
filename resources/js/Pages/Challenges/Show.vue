@@ -78,7 +78,7 @@ const page = usePage<PageProps>();
                 <Link
                     v-if="page.props.auth.group"
                     :href="`/spottings/add/${props.challenge.id}`"
-                    class="bg-berry hover:bg-berry-bright mt-7 inline-block px-5 py-3 font-bold text-parchment"
+                    class="bg-berry hover:bg-berry-bright text-parchment mt-7 inline-block px-5 py-3 font-bold"
                 >
                     I spotted {{ props.challenge.plural ?? 'this' }}
                 </Link>

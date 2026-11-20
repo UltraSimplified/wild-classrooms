@@ -45,11 +45,15 @@ const destroy = (user: AdminUser) => {
                     <td class="py-2 text-right whitespace-nowrap">
                         <Link
                             :href="`/admin/users/${user.id}/edit`"
-                            class="underline hover:text-leaf"
+                            class="hover:text-leaf underline"
                         >
                             Edit
                         </Link>
-                        <button type="button" class="text-berry ml-3 underline" @click="destroy(user)">
+                        <button
+                            type="button"
+                            class="text-berry ml-3 underline"
+                            @click="destroy(user)"
+                        >
                             Delete
                         </button>
                     </td>
@@ -57,7 +61,11 @@ const destroy = (user: AdminUser) => {
             </tbody>
         </table>
 
-        <nav v-if="props.users.links.length > 3" class="mt-6 flex flex-wrap gap-2" aria-label="Pages">
+        <nav
+            v-if="props.users.links.length > 3"
+            class="mt-6 flex flex-wrap gap-2"
+            aria-label="Pages"
+        >
             <Link
                 v-for="link in props.users.links"
                 :key="link.label"

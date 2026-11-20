@@ -3,7 +3,6 @@ import type { route as ziggyRoute } from 'ziggy-js';
 import type { PageProps as AppPageProps } from './';
 
 declare global {
-     
     var route: typeof ziggyRoute;
 }
 

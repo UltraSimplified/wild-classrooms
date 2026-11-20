@@ -9,18 +9,18 @@ const open = ref(false);
 </script>
 
 <template>
-    <header class="u-timber border-b-2 border-leaf-deep/40">
+    <header class="u-timber border-leaf-deep/40 border-b-2">
         <nav class="mx-auto flex max-w-6xl items-center gap-4 px-4 py-3" aria-label="Main">
             <Link
                 href="/"
-                class="u-display text-parchment text-step-2 shrink-0 leading-none hover:text-leaf-pale"
+                class="u-display text-parchment text-step-2 hover:text-leaf-pale shrink-0 leading-none"
             >
                 Wild Classrooms
             </Link>
 
             <button
                 type="button"
-                class="ml-auto rounded px-3 py-2 text-parchment md:hidden"
+                class="text-parchment ml-auto rounded px-3 py-2 md:hidden"
                 :aria-expanded="open"
                 aria-controls="site-menu"
                 @click="open = !open"
@@ -28,10 +28,7 @@ const open = ref(false);
                 {{ open ? 'Close' : 'Menu' }}
             </button>
 
-            <ul
-                id="site-menu"
-                class="text-parchment ml-auto hidden items-center gap-5 md:flex"
-            >
+            <ul id="site-menu" class="text-parchment ml-auto hidden items-center gap-5 md:flex">
                 <li><Link href="/about" class="hover:text-leaf-pale">About</Link></li>
                 <li><Link href="/gallery" class="hover:text-leaf-pale">Gallery</Link></li>
                 <li>
@@ -71,7 +68,7 @@ const open = ref(false);
                     <li>
                         <Link
                             href="/register"
-                            class="bg-berry hover:bg-berry-bright rounded-sm px-3 py-1.5 font-bold text-parchment"
+                            class="bg-berry hover:bg-berry-bright text-parchment rounded-sm px-3 py-1.5 font-bold"
                         >
                             Join in
                         </Link>
@@ -80,7 +77,7 @@ const open = ref(false);
             </ul>
         </nav>
 
-        <ul v-if="open" class="text-parchment border-t border-parchment/20 px-4 pb-4 md:hidden">
+        <ul v-if="open" class="text-parchment border-parchment/20 border-t px-4 pb-4 md:hidden">
             <li class="py-2"><Link href="/about">About</Link></li>
             <li class="py-2"><Link href="/gallery">Gallery</Link></li>
             <li class="py-2">

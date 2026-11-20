@@ -76,20 +76,21 @@ const submit = () =>
 
             <p class="text-step--1 text-ink-soft">
                 By joining you agree to our
-                <Link href="/terms-conditions" class="underline hover:text-leaf">
-                    terms and conditions</Link>.
+                <Link href="/terms-conditions" class="hover:text-leaf underline">
+                    terms and conditions</Link
+                >.
             </p>
 
             <div class="flex flex-wrap items-center gap-4">
                 <button
                     type="submit"
-                    class="bg-berry hover:bg-berry-bright px-5 py-3 font-bold text-parchment disabled:opacity-60"
+                    class="bg-berry hover:bg-berry-bright text-parchment px-5 py-3 font-bold disabled:opacity-60"
                     :disabled="form.processing"
                 >
                     {{ form.processing ? 'Creating…' : 'Create my account' }}
                 </button>
 
-                <Link href="/login" class="underline hover:text-leaf">
+                <Link href="/login" class="hover:text-leaf underline">
                     I already have an account
                 </Link>
             </div>

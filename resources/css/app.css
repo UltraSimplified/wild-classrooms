@@ -19,11 +19,11 @@
  */
 @theme {
     /* Sampled from the artwork */
-    --color-leaf: #6e9d03;        /* leaf front face */
-    --color-leaf-pale: #8cab46;   /* leaf underside */
-    --color-leaf-deep: #0a3309;   /* leaf outline */
-    --color-bark: #8f785c;        /* trunk */
-    --color-bark-deep: #4e3f2d;   /* signpost timber */
+    --color-leaf: #6e9d03; /* leaf front face */
+    --color-leaf-pale: #8cab46; /* leaf underside */
+    --color-leaf-deep: #0a3309; /* leaf outline */
+    --color-bark: #8f785c; /* trunk */
+    --color-bark-deep: #4e3f2d; /* signpost timber */
 
     /* Ground and ink */
     --color-parchment: #f2ead6;
@@ -96,7 +96,9 @@
     background-image:
         radial-gradient(circle at 20% 30%, rgb(39 51 31 / 0.025) 0 1px, transparent 1px),
         radial-gradient(circle at 70% 60%, rgb(39 51 31 / 0.02) 0 1px, transparent 1px);
-    background-size: 7px 7px, 11px 11px;
+    background-size:
+        7px 7px,
+        11px 11px;
 }
 
 /* A sawn-timber edge, used where the old site used a wood-grain bar. */

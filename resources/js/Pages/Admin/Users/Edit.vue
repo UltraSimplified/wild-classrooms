@@ -58,13 +58,13 @@ const submit = () => form.put(`/admin/users/${props.user.id}`);
             <div class="flex items-center gap-4">
                 <button
                     type="submit"
-                    class="bg-berry hover:bg-berry-bright px-5 py-3 font-bold text-parchment disabled:opacity-60"
+                    class="bg-berry hover:bg-berry-bright text-parchment px-5 py-3 font-bold disabled:opacity-60"
                     :disabled="form.processing"
                 >
                     {{ form.processing ? 'Saving…' : 'Save changes' }}
                 </button>
 
-                <Link href="/admin/users" class="underline hover:text-leaf">Cancel</Link>
+                <Link href="/admin/users" class="hover:text-leaf underline">Cancel</Link>
             </div>
         </form>
     </SiteLayout>

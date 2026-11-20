@@ -25,9 +25,7 @@ defineProps<{ past: Challenge[]; upcoming: Challenge[]; currentMonth: number }>(
         lede="Five for every month of the year. Anything from an earlier month still counts whenever you spot it."
     >
         <section>
-            <h2 class="u-display text-step-2 border-bark/30 border-b pb-2">
-                Out now
-            </h2>
+            <h2 class="u-display text-step-2 border-bark/30 border-b pb-2">Out now</h2>
             <div class="mt-6 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
                 <SpeciesCard v-for="challenge in past" :key="challenge.id" v-bind="challenge" />
             </div>

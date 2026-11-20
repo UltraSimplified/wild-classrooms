@@ -77,7 +77,7 @@ const deleteAccount = () => {
                     <div class="flex items-center gap-4">
                         <button
                             type="submit"
-                            class="bg-berry hover:bg-berry-bright px-5 py-3 font-bold text-parchment disabled:opacity-60"
+                            class="bg-berry hover:bg-berry-bright text-parchment px-5 py-3 font-bold disabled:opacity-60"
                             :disabled="details.processing"
                         >
                             Save details
@@ -87,7 +87,7 @@ const deleteAccount = () => {
                 </form>
 
                 <p class="mt-4">
-                    <Link href="/profile/edit" class="underline hover:text-leaf">
+                    <Link href="/profile/edit" class="hover:text-leaf underline">
                         Edit your group and members instead
                     </Link>
                 </p>
@@ -143,7 +143,7 @@ const deleteAccount = () => {
                     <div class="flex items-center gap-4">
                         <button
                             type="submit"
-                            class="bg-berry hover:bg-berry-bright px-5 py-3 font-bold text-parchment disabled:opacity-60"
+                            class="bg-berry hover:bg-berry-bright text-parchment px-5 py-3 font-bold disabled:opacity-60"
                             :disabled="password.processing"
                         >
                             Change password
@@ -159,8 +159,8 @@ const deleteAccount = () => {
                 </h2>
 
                 <p class="mt-3">
-                    This removes your group, its members and everything they have spotted. We
-                    cannot get any of it back afterwards.
+                    This removes your group, its members and everything they have spotted. We cannot
+                    get any of it back afterwards.
                 </p>
 
                 <form class="mt-5 space-y-5" @submit.prevent="deleteAccount">
@@ -180,7 +180,7 @@ const deleteAccount = () => {
 
                     <button
                         type="submit"
-                        class="border-berry text-berry hover:bg-berry border px-5 py-3 font-bold hover:text-parchment disabled:opacity-60"
+                        class="border-berry text-berry hover:bg-berry hover:text-parchment border px-5 py-3 font-bold disabled:opacity-60"
                         :disabled="deletion.processing"
                     >
                         Delete my account

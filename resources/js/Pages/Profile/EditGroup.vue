@@ -55,8 +55,7 @@ const form = useForm({
 
 const submit = () => form.post('/profile/update', { forceFormData: true });
 
-const spottingsFor = (id: number | null) =>
-    props.members.find((m) => m.id === id)?.spottings ?? 0;
+const spottingsFor = (id: number | null) => props.members.find((m) => m.id === id)?.spottings ?? 0;
 </script>
 
 <template>
@@ -80,9 +79,7 @@ const spottingsFor = (id: number | null) =>
                 </p>
 
                 <div v-for="(member, index) in form.members" :key="index">
-                    <label :for="`member-${index}`" class="sr-only">
-                        Member {{ index + 1 }}
-                    </label>
+                    <label :for="`member-${index}`" class="sr-only"> Member {{ index + 1 }} </label>
                     <div class="flex items-baseline gap-3">
                         <input
                             :id="`member-${index}`"
@@ -105,13 +102,13 @@ const spottingsFor = (id: number | null) =>
             <div class="flex flex-wrap items-center gap-4">
                 <button
                     type="submit"
-                    class="bg-berry hover:bg-berry-bright px-5 py-3 font-bold text-parchment disabled:opacity-60"
+                    class="bg-berry hover:bg-berry-bright text-parchment px-5 py-3 font-bold disabled:opacity-60"
                     :disabled="form.processing"
                 >
                     {{ form.processing ? 'Saving…' : 'Save changes' }}
                 </button>
 
-                <Link href="/profile" class="underline hover:text-leaf">
+                <Link href="/profile" class="hover:text-leaf underline">
                     Change your email or password
                 </Link>
             </div>

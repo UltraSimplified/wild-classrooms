@@ -26,7 +26,8 @@ const props = defineProps<{
         <article class="mx-auto max-w-2xl">
             <h1 class="u-display text-step-3 sm:text-step-4">{{ props.post.title }}</h1>
             <p class="text-ink-soft mt-2">
-                {{ props.post.postedAt }}<template v-if="props.post.author">, by {{ props.post.author }}</template>
+                {{ props.post.postedAt
+                }}<template v-if="props.post.author">, by {{ props.post.author }}</template>
             </p>
 
             <MediaImage
@@ -36,13 +37,17 @@ const props = defineProps<{
                 loading="eager"
             />
 
-            <div v-if="props.post.intro" class="text-step-1 prose-wc mt-6" v-html="props.post.intro" />
+            <div
+                v-if="props.post.intro"
+                class="text-step-1 prose-wc mt-6"
+                v-html="props.post.intro"
+            />
             <div v-if="props.post.content" class="prose-wc mt-4" v-html="props.post.content" />
 
             <p v-if="props.post.challenge" class="border-bark/30 mt-10 border-t pt-4">
                 <Link
                     :href="`/spottings/${props.post.challenge.id}/${props.post.challenge.slug}`"
-                    class="underline hover:text-leaf"
+                    class="hover:text-leaf underline"
                 >
                     See the {{ props.post.challenge.title }} challenge
                 </Link>

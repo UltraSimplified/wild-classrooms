@@ -93,11 +93,7 @@ const destroy = () => {
                     alt="The photo on this spotting"
                     class="border-bark/30 mt-1 max-w-xs border"
                 />
-                <button
-                    type="button"
-                    class="text-berry mt-2 underline"
-                    @click="removePicture"
-                >
+                <button type="button" class="text-berry mt-2 underline" @click="removePicture">
                     Remove this photo
                 </button>
             </div>
@@ -150,7 +146,7 @@ const destroy = () => {
             <div class="flex flex-wrap items-center gap-4">
                 <button
                     type="submit"
-                    class="bg-berry hover:bg-berry-bright px-5 py-3 font-bold text-parchment disabled:opacity-60"
+                    class="bg-berry hover:bg-berry-bright text-parchment px-5 py-3 font-bold disabled:opacity-60"
                     :disabled="form.processing"
                 >
                     {{ form.processing ? 'Saving…' : 'Save changes' }}

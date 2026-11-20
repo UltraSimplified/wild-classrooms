@@ -63,7 +63,7 @@ const previousMonth = computed(() => (props.month === 1 ? 12 : props.month - 1))
             <p v-if="props.group.title" class="text-ink-soft">
                 <Link
                     :href="`/groups/woodland/${props.group.id}/${props.group.slug}`"
-                    class="underline hover:text-leaf"
+                    class="hover:text-leaf underline"
                 >
                     {{ props.group.title }}
                 </Link>
@@ -80,10 +80,7 @@ const previousMonth = computed(() => (props.month === 1 ? 12 : props.month - 1))
             </div>
 
             <div class="md:col-span-2">
-                <CategoryProgress
-                    :month-abbreviation="abbreviation"
-                    :spotted="props.spotted"
-                />
+                <CategoryProgress :month-abbreviation="abbreviation" :spotted="props.spotted" />
 
                 <p class="text-step--1 text-ink-soft mt-3">
                     A leaf appears on the tree for each category found, in each month.
@@ -92,7 +89,7 @@ const previousMonth = computed(() => (props.month === 1 ? 12 : props.month - 1))
                 <Link
                     v-if="props.isMyGroup"
                     href="/spottings/add"
-                    class="bg-berry hover:bg-berry-bright mt-5 inline-block px-5 py-3 font-bold text-parchment"
+                    class="bg-berry hover:bg-berry-bright text-parchment mt-5 inline-block px-5 py-3 font-bold"
                 >
                     Add a spotting
                 </Link>
@@ -103,11 +100,17 @@ const previousMonth = computed(() => (props.month === 1 ? 12 : props.month - 1))
             <div class="border-bark/30 flex flex-wrap items-baseline justify-between border-b pb-2">
                 <h2 class="u-display text-step-2">{{ props.monthName }} — five to find</h2>
                 <span class="text-step--1">
-                    <Link :href="`/tree/${props.unit.id}/${props.unit.slug}/${previousMonth}`" class="underline hover:text-leaf">
+                    <Link
+                        :href="`/tree/${props.unit.id}/${props.unit.slug}/${previousMonth}`"
+                        class="hover:text-leaf underline"
+                    >
                         {{ nameOfMonth(previousMonth) }}
                     </Link>
                     <span aria-hidden="true" class="text-ink-soft mx-2">|</span>
-                    <Link :href="`/tree/${props.unit.id}/${props.unit.slug}/${props.nextMonth}`" class="underline hover:text-leaf">
+                    <Link
+                        :href="`/tree/${props.unit.id}/${props.unit.slug}/${props.nextMonth}`"
+                        class="hover:text-leaf underline"
+                    >
                         {{ nameOfMonth(props.nextMonth) }}
                     </Link>
                 </span>
@@ -136,7 +139,7 @@ const previousMonth = computed(() => (props.month === 1 ? 12 : props.month - 1))
                     <p v-if="props.isMyGroup" class="text-step--1 mt-1">
                         <Link
                             :href="`/spottings/edit/${spotting.id}`"
-                            class="underline hover:text-leaf"
+                            class="hover:text-leaf underline"
                         >
                             Edit this spotting
                         </Link>

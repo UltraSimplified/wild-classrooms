@@ -30,9 +30,7 @@ const total = computed(() => rows.value.filter((r) => r.found).length);
 
 <template>
     <div class="border-bark/30 bg-parchment-deep/40 border p-4">
-        <h3 class="u-display text-step-1">
-            {{ total }} of {{ rows.length }} found
-        </h3>
+        <h3 class="u-display text-step-1">{{ total }} of {{ rows.length }} found</h3>
 
         <ul class="mt-3 space-y-1.5">
             <li

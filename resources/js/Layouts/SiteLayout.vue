@@ -20,7 +20,7 @@ const page = usePage<PageProps>();
         >
             <p
                 role="status"
-                class="border-l-4 px-4 py-3 !max-w-none"
+                class="!max-w-none border-l-4 px-4 py-3"
                 :class="
                     page.props.flash.error
                         ? 'border-berry bg-berry/10 text-berry'

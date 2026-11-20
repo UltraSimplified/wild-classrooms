@@ -25,9 +25,7 @@ const submit = () => form.post('/profiles/onboarding-members');
     >
         <form class="max-w-xl space-y-4" @submit.prevent="submit">
             <div v-for="(_, index) in form.members" :key="index">
-                <label :for="`member-${index}`" class="sr-only">
-                    Member {{ index + 1 }}
-                </label>
+                <label :for="`member-${index}`" class="sr-only"> Member {{ index + 1 }} </label>
                 <input
                     :id="`member-${index}`"
                     v-model="form.members[index]"
@@ -43,7 +41,7 @@ const submit = () => form.post('/profiles/onboarding-members');
 
             <button
                 type="submit"
-                class="bg-berry hover:bg-berry-bright px-5 py-3 font-bold text-parchment disabled:opacity-60"
+                class="bg-berry hover:bg-berry-bright text-parchment px-5 py-3 font-bold disabled:opacity-60"
                 :disabled="form.processing"
             >
                 {{ form.processing ? 'Planting…' : 'Plant our woodland' }}

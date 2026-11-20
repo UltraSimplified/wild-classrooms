@@ -64,23 +64,24 @@
         },
         {
             "name": "brick/math",
-            "version": "0.20.0",
+            "version": "1.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/brick/math.git",
-                "reference": "44d7e16e2e940d9c7dde7076598e25855026dba2"
+                "reference": "2effe05d2177c451b86c6a073196a4034c02f211"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/brick/math/zipball/44d7e16e2e940d9c7dde7076598e25855026dba2",
-                "reference": "44d7e16e2e940d9c7dde7076598e25855026dba2",
+                "url": "https://api.github.com/repos/brick/math/zipball/2effe05d2177c451b86c6a073196a4034c02f211",
+                "reference": "2effe05d2177c451b86c6a073196a4034c02f211",
                 "shasum": ""
             },
             "require": {
                 "php": "^8.2"
             },
             "require-dev": {
-                "phpstan/phpstan": "2.1.22",
+                "phpstan/phpstan": "2.2.13",
+                "phpstan/phpstan-phpunit": "2.0.18",
                 "phpunit/phpunit": "^11.5"
             },
             "type": "library",
@@ -111,7 +112,7 @@
             ],
             "support": {
                 "issues": "https://github.com/brick/math/issues",
-                "source": "https://github.com/brick/math/tree/0.20.0"
+                "source": "https://github.com/brick/math/tree/1.0.0"
             },
             "funding": [
                 {
@@ -119,25 +120,25 @@
                     "type": "github"
                 }
             ],
-            "time": "2026-08-28T20:53:19+00:00",
-            "published-time": "2026-08-28T20:57:31+00:00"
+            "time": "2026-09-12T10:28:18+00:00",
+            "published-time": "2026-09-12T12:23:30+00:00"
         },
         {
             "name": "brick/money",
-            "version": "0.14.2",
+            "version": "0.15.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/brick/money.git",
-                "reference": "1381b2884cbd758985766df4ee9f63539d1f934f"
+                "reference": "d025eb4a105071028764859d93537d394a147c31"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/brick/money/zipball/1381b2884cbd758985766df4ee9f63539d1f934f",
-                "reference": "1381b2884cbd758985766df4ee9f63539d1f934f",
+                "url": "https://api.github.com/repos/brick/money/zipball/d025eb4a105071028764859d93537d394a147c31",
+                "reference": "d025eb4a105071028764859d93537d394a147c31",
                 "shasum": ""
             },
             "require": {
-                "brick/math": "~0.15.0 || ~0.16.0 || ~0.17.0 || ~0.18.0 || ~0.19.0 || ~0.20.0",
+                "brick/math": "~0.15.0 || ~0.16.0 || ~0.17.0 || ~0.18.0 || ~0.19.0 || ~0.20.0 || ^1.0",
                 "php": "^8.2",
                 "psr/simple-cache": "^2.0 || ^3.0"
             },
@@ -149,7 +150,7 @@
                 "phpunit/phpunit": "^11.0"
             },
             "suggest": {
-                "ext-intl": "Required to format Money objects"
+                "ext-intl": "Required to format Money objects to a locale (needs ICU 62.1 or later)"
             },
             "type": "library",
             "autoload": {
@@ -169,7 +170,7 @@
             ],
             "support": {
                 "issues": "https://github.com/brick/money/issues",
-                "source": "https://github.com/brick/money/tree/0.14.2"
+                "source": "https://github.com/brick/money/tree/0.15.2"
             },
             "funding": [
                 {
@@ -177,8 +178,8 @@
                     "type": "github"
                 }
             ],
-            "time": "2026-08-28T21:06:24+00:00",
-            "published-time": "2026-08-28T21:12:18+00:00"
+            "time": "2026-09-29T22:27:31+00:00",
+            "published-time": "2026-09-29T22:29:29+00:00"
         },
         {
             "name": "bugsnag/bugsnag",
@@ -2230,20 +2231,20 @@
         },
         {
             "name": "laravel/nova",
-            "version": "5.11.1",
+            "version": "5.12.0",
             "source": {
                 "type": "git",
                 "url": "git@github.com:laravel/nova.git",
-                "reference": "fb867d9339151616746e924231c4a9700da214c9"
+                "reference": "3af18fbfbe7e9d45e012a00101cfa6876b6b8e86"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://nova.laravel.com/dist/laravel/nova/laravel-nova-fb867d9339151616746e924231c4a9700da214c9-zip-f97236.zip",
-                "reference": "fb867d9339151616746e924231c4a9700da214c9",
-                "shasum": "9220db2acfd144259baa9bdff745b6d16918f731"
+                "url": "https://nova.laravel.com/dist/laravel/nova/laravel-nova-3af18fbfbe7e9d45e012a00101cfa6876b6b8e86-zip-baee47.zip",
+                "reference": "3af18fbfbe7e9d45e012a00101cfa6876b6b8e86",
+                "shasum": "0bc33bfcafb36d5227a28a4ce0bba2e47043cb1e"
             },
             "require": {
-                "brick/money": "^0.8|^0.9|^0.10|^0.11|^0.12|^0.13|^0.14",
+                "brick/money": "^0.8|^0.9|^0.10|^0.11|^0.12|^0.13|^0.14|^0.15",
                 "ext-json": "*",
                 "illuminate/filesystem": "^10.48.29|^11.44.1|^12.1.1|^13.0.0",
                 "illuminate/support": "^10.48.29|^11.44.1|^12.1.1|^13.0.0",
@@ -2252,8 +2253,8 @@
                 "laravel/sentinel": "^1.1.0",
                 "laravel/serializable-closure": "^1.3|^2.0.0",
                 "nesbot/carbon": "^2.62.1|^3.4",
-                "openspout/openspout": "^4.24",
-                "orchestra/sidekick": "^1.2.18",
+                "openspout/openspout": "^4.24|^5.0",
+                "orchestra/sidekick": "^1.2.21",
                 "php": "^8.1",
                 "spatie/once": "^3.0",
                 "symfony/console": "^6.4.14|^7.0.3|^8.0.0",
@@ -2276,10 +2277,9 @@
                 "orchestra/testbench-core": "^8.35|^9.12|^10.1|^11.0",
                 "orchestra/testbench-dusk": "^8.36|^9.15|^10.1|^11.0",
                 "orchestra/workbench": "^8.17.4|^9.13.4|^10.0.3|^11.0",
-                "phpstan/phpstan": "^1.12.27|^2.1.17",
+                "phpstan/phpstan": "^1.12.27|2.3.1",
                 "predis/predis": "^2.3|^3.0",
-                "spatie/laravel-ray": "^1.39.1",
-                "spatie/simple-excel": "^3.7.3"
+                "spatie/laravel-ray": "^1.39.1"
             },
             "suggest": {
                 "ext-intl": "Required to format Currency field"
@@ -2409,10 +2409,10 @@
                 "laravel"
             ],
             "support": {
-                "source": "https://github.com/laravel/nova/tree/v5.11.1",
+                "source": "https://github.com/laravel/nova/tree/v5.12.0",
                 "issues": "https://github.com/laravel/nova/issues"
             },
-            "time": "2026-10-12T06:05:19+00:00"
+            "time": "2026-11-19T23:33:12+00:00"
         },
         {
             "name": "laravel/passkeys",
@@ -4168,40 +4168,43 @@
         },
         {
             "name": "openspout/openspout",
-            "version": "v4.33.0",
+            "version": "v5.15.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/openspout/openspout.git",
-                "reference": "8ddddbb3ece300a84bb13205e40686b78c39fde7"
+                "reference": "e16e49f57806c3ceb486205cba66ded33d708638"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/openspout/openspout/zipball/8ddddbb3ece300a84bb13205e40686b78c39fde7",
-                "reference": "8ddddbb3ece300a84bb13205e40686b78c39fde7",
+                "url": "https://api.github.com/repos/openspout/openspout/zipball/e16e49f57806c3ceb486205cba66ded33d708638",
+                "reference": "e16e49f57806c3ceb486205cba66ded33d708638",
                 "shasum": ""
             },
             "require": {
                 "ext-dom": "*",
-                "ext-fileinfo": "*",
                 "ext-filter": "*",
                 "ext-libxml": "*",
                 "ext-xmlreader": "*",
                 "ext-zip": "*",
-                "php": "~8.3.0 || ~8.4.0 || ~8.5.0 || ~8.6.0"
+                "php": "~8.4.0 || ~8.5.0 || ~8.6.0"
             },
             "require-dev": {
+                "ext-fileinfo": "*",
+                "ext-mbstring": "*",
+                "ext-openssl": "*",
                 "ext-zlib": "*",
-                "friendsofphp/php-cs-fixer": "^3.90.0",
-                "infection/infection": "^0.31.9",
-                "phpbench/phpbench": "^1.4.3",
-                "phpstan/phpstan": "^2.1.32",
-                "phpstan/phpstan-phpunit": "^2.0.8",
-                "phpstan/phpstan-strict-rules": "^2.0.7",
-                "phpunit/phpunit": "^12.4.4"
+                "friendsofphp/php-cs-fixer": "^3.95.32",
+                "infection/infection": "^0.35.12",
+                "phpbench/phpbench": "^1.7.0",
+                "phpstan/phpstan": "^2.3.6",
+                "phpstan/phpstan-phpunit": "^2.1.2",
+                "phpstan/phpstan-strict-rules": "^2.1.1",
+                "phpunit/phpunit": "^13.4.7"
             },
             "suggest": {
                 "ext-iconv": "To handle non UTF-8 CSV files (if \"php-mbstring\" is not already installed or is too limited)",
-                "ext-mbstring": "To handle non UTF-8 CSV files (if \"iconv\" is not already installed)"
+                "ext-mbstring": "To handle non UTF-8 CSV files (if \"iconv\" is not already installed)",
+                "ext-openssl": "To read and write password-protected XLSX files"
             },
             "type": "library",
             "extra": {
@@ -4245,7 +4248,7 @@
             ],
             "support": {
                 "issues": "https://github.com/openspout/openspout/issues",
-                "source": "https://github.com/openspout/openspout/tree/v4.33.0"
+                "source": "https://github.com/openspout/openspout/tree/v5.15.3"
             },
             "funding": [
                 {
@@ -4257,8 +4260,8 @@
                     "type": "github"
                 }
             ],
-            "time": "2026-11-19T13:20:45+00:00",
-            "published-time": "2026-11-19T13:21:34+00:00"
+            "time": "2026-11-19T11:47:39+00:00",
+            "published-time": "2026-11-19T11:48:14+00:00"
         },
         {
             "name": "orchestra/sidekick",
@@ -11798,16 +11801,16 @@
         },
         {
             "name": "laravel/nova-devtool",
-            "version": "v1.10.2",
+            "version": "v1.11.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/laravel/nova-devtool.git",
-                "reference": "9a78d2570953b7d1f3635e4ffd5bfb87a72ce5af"
+                "reference": "a929de86facb759c98bdb791c8106302cc14837c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/laravel/nova-devtool/zipball/9a78d2570953b7d1f3635e4ffd5bfb87a72ce5af",
-                "reference": "9a78d2570953b7d1f3635e4ffd5bfb87a72ce5af",
+                "url": "https://api.github.com/repos/laravel/nova-devtool/zipball/a929de86facb759c98bdb791c8106302cc14837c",
+                "reference": "a929de86facb759c98bdb791c8106302cc14837c",
                 "shasum": ""
             },
             "require": {
@@ -11819,10 +11822,10 @@
                 "symfony/polyfill-php83": "^1.33"
             },
             "conflict": {
-                "laravel/nova": "<5.11.1|>=6.0.0"
+                "laravel/nova": "<5.12.0|>=6.0.0"
             },
             "require-dev": {
-                "laravel/nova": "^5.11.1",
+                "laravel/nova": "^5.12.0",
                 "laravel/pint": "^1.17",
                 "orchestra/pest-plugin-testbench": "^2.0|^3.0|^4.0",
                 "orchestra/testbench": "^8.30|^9.8|^10.0|^11.0",
@@ -11854,10 +11857,10 @@
             ],
             "support": {
                 "issues": "https://github.com/laravel/nova-devtool/issues",
-                "source": "https://github.com/laravel/nova-devtool/tree/v1.10.2"
+                "source": "https://github.com/laravel/nova-devtool/tree/v1.11.0"
             },
-            "time": "2026-10-12T06:23:52+00:00",
-            "published-time": "2026-10-12T06:24:41+00:00"
+            "time": "2026-11-20T07:42:39+00:00",
+            "published-time": "2026-11-20T07:44:29+00:00"
         },
         {
             "name": "laravel/pail",

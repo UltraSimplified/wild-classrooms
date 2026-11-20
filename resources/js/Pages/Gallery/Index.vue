@@ -24,21 +24,14 @@ const page = usePage<PageProps>();
  * CSRF and any crawler walking the page inflated every count.
  */
 const like = (spotting: GallerySpotting) => {
-    router.post(
-        `/gallery/${spotting.id}/like`,
-        {},
-        { preserveScroll: true, preserveState: true },
-    );
+    router.post(`/gallery/${spotting.id}/like`, {}, { preserveScroll: true, preserveState: true });
 };
 </script>
 
 <template>
     <Head title="Gallery" />
 
-    <SiteLayout
-        title="Gallery"
-        lede="Photos and drawings groups have chosen to share."
-    >
+    <SiteLayout title="Gallery" lede="Photos and drawings groups have chosen to share.">
         <div class="columns-1 gap-5 sm:columns-2 lg:columns-3 [&>*]:mb-5">
             <figure
                 v-for="spotting in props.spottings"
@@ -61,7 +54,10 @@ const like = (spotting: GallerySpotting) => {
                         <p v-if="spotting.notes" class="text-step--1 mt-1 !max-w-none">
                             {{ spotting.notes }}
                         </p>
-                        <p v-if="spotting.group" class="text-step--1 text-ink-soft mt-1 !max-w-none">
+                        <p
+                            v-if="spotting.group"
+                            class="text-step--1 text-ink-soft mt-1 !max-w-none"
+                        >
                             {{ spotting.group }}
                         </p>
                     </div>
@@ -84,7 +80,7 @@ const like = (spotting: GallerySpotting) => {
             <Link
                 v-if="page.props.auth.group"
                 href="/spottings/add"
-                class="underline hover:text-leaf"
+                class="hover:text-leaf underline"
             >
                 Add the first spotting.
             </Link>

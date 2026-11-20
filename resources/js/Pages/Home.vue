@@ -70,53 +70,47 @@ const heroTreeAlt = computed(() =>
         -->
         <section class="grid items-center gap-10 md:grid-cols-5">
             <div class="md:col-span-3">
-                <h1 class="u-display text-step-3 sm:text-step-4">
-                    Spot 60 species in a year
-                </h1>
+                <h1 class="u-display text-step-3 sm:text-step-4">Spot 60 species in a year</h1>
                 <p class="text-step-1 mt-4">
-                    Five plants and animals to find each month, around Stroud and wherever
-                    else you go. Tick off what you see and your tree grows a leaf for it.
+                    Five plants and animals to find each month, around Stroud and wherever else you
+                    go. Tick off what you see and your tree grows a leaf for it.
                 </p>
                 <p class="text-step-0 text-ink-soft mt-3">
-                    Schools, families, Scout and Guide groups — anyone can join. It takes
-                    about five minutes a week.
+                    Schools, families, Scout and Guide groups — anyone can join. It takes about five
+                    minutes a week.
                 </p>
 
                 <div class="mt-7 flex flex-wrap items-center gap-3">
                     <Link
                         v-if="!page.props.auth.user"
                         href="/register"
-                        class="bg-berry hover:bg-berry-bright px-5 py-3 font-bold text-parchment"
+                        class="bg-berry hover:bg-berry-bright text-parchment px-5 py-3 font-bold"
                     >
                         Join in
                     </Link>
                     <Link
                         v-else-if="page.props.auth.group"
                         :href="`/groups/woodland/${page.props.auth.group.id}/${page.props.auth.group.slug}`"
-                        class="bg-berry hover:bg-berry-bright px-5 py-3 font-bold text-parchment"
+                        class="bg-berry hover:bg-berry-bright text-parchment px-5 py-3 font-bold"
                     >
                         Our woodland
                     </Link>
                     <Link
                         v-else
                         href="/profiles/onboarding"
-                        class="bg-berry hover:bg-berry-bright px-5 py-3 font-bold text-parchment"
+                        class="bg-berry hover:bg-berry-bright text-parchment px-5 py-3 font-bold"
                     >
                         Set up your group
                     </Link>
 
-                    <Link href="/gallery" class="text-ink underline hover:text-leaf">
+                    <Link href="/gallery" class="text-ink hover:text-leaf underline">
                         See what people have spotted
                     </Link>
                 </div>
             </div>
 
             <div class="md:col-span-2">
-                <img
-                    :src="heroTreeSrc"
-                    :alt="heroTreeAlt"
-                    class="mx-auto w-full max-w-sm"
-                />
+                <img :src="heroTreeSrc" :alt="heroTreeAlt" class="mx-auto w-full max-w-sm" />
             </div>
         </section>
 
@@ -144,9 +138,7 @@ const heroTreeAlt = computed(() =>
                     v-for="spotting in props.featured"
                     v-show="!missing.has(spotting.id)"
                     :key="spotting.id"
-                    :href="
-                        spotting.challengeId ? `/spottings/${spotting.challengeId}` : '/gallery'
-                    "
+                    :href="spotting.challengeId ? `/spottings/${spotting.challengeId}` : '/gallery'"
                     class="block break-inside-avoid"
                 >
                     <MediaImage
@@ -167,7 +159,7 @@ const heroTreeAlt = computed(() =>
                 <li v-for="group in props.mapGroups" :key="group.id">
                     <Link
                         :href="`/groups/woodland/${group.id}/${group.slug}`"
-                        class="underline hover:text-leaf"
+                        class="hover:text-leaf underline"
                     >
                         {{ group.title }}
                     </Link>

@@ -225,6 +225,19 @@ copy has real foreign keys where production has none.
   additive. Run `migrate --pretend` against a copy first.
 - **Copy the uploads.** `public_html/uploads` and `public_html/storage` hold
   the real photos and are not in this repo.
+- **Clear the view cache before building the CSS.** `resources/css/app.css`
+  carries Laravel's default `@source '../../storage/framework/views/*.php'`,
+  which aims Tailwind at the *compiled view cache* rather than at a source
+  directory. What sits in that cache depends on which pages happen to have
+  been rendered, so the generated stylesheet moves with it: measured here, 431
+  rules with Nova's login page cached against 395 with the cache cleared — 36
+  of Nova's own utilities quietly absorbed into the site's CSS. It is additive
+  rather than breaking, but it means two builds of the same commit can differ.
+  Clear it first in deploy and in CI:
+
+  ```bash
+  php artisan view:clear && npm run build
+  ```
 - **A map on the home page.** The old site used Google Maps with the key
   pasted into the template. The data is passed to the page but not yet
   plotted; Leaflet with OpenStreetMap would remove the Google dependency

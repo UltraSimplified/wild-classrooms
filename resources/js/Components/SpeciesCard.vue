@@ -56,14 +56,11 @@ const photoMissing = ref(false);
                 {{ props.category }}
             </p>
 
-            <p v-if="props.teaser" class="text-step--1 mt-2 grow !max-w-none">
+            <p v-if="props.teaser" class="text-step--1 mt-2 !max-w-none grow">
                 {{ props.teaser }}
             </p>
 
-            <p
-                v-if="props.spotted"
-                class="text-leaf text-step--1 mt-3 font-bold !max-w-none"
-            >
+            <p v-if="props.spotted" class="text-leaf text-step--1 mt-3 !max-w-none font-bold">
                 Spotted
             </p>
         </div>

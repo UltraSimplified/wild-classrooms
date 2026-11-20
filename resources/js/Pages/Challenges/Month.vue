@@ -31,14 +31,18 @@ const nameOfMonth = (m: number) =>
         lede="Go and look for these. Tick off whatever you see, and add a photo or a drawing if you like."
     >
         <div class="mt-2 grid gap-5 sm:grid-cols-2 lg:grid-cols-5">
-            <SpeciesCard v-for="challenge in props.challenges" :key="challenge.id" v-bind="challenge" />
+            <SpeciesCard
+                v-for="challenge in props.challenges"
+                :key="challenge.id"
+                v-bind="challenge"
+            />
         </div>
 
         <nav class="border-bark/30 mt-12 flex justify-between border-t pt-4" aria-label="Months">
-            <Link :href="`/month/${previous}`" class="underline hover:text-leaf">
+            <Link :href="`/month/${previous}`" class="hover:text-leaf underline">
                 {{ nameOfMonth(previous) }}
             </Link>
-            <Link :href="`/month/${next}`" class="underline hover:text-leaf">
+            <Link :href="`/month/${next}`" class="hover:text-leaf underline">
                 {{ nameOfMonth(next) }}
             </Link>
         </nav>

@@ -21,17 +21,17 @@ import SiteLayout from '@/Layouts/SiteLayout.vue';
             </p>
 
             <p>
-                If you want to delete your account, or you would like a copy of everything you
-                have uploaded, contact Tamsin Bent and we will sort it out.
+                If you want to delete your account, or you would like a copy of everything you have
+                uploaded, contact Tamsin Bent and we will sort it out.
             </p>
 
             <p class="mt-6">
                 Tamsin Bent, Wild Classrooms Project Officer<br />
-                <a href="mailto:tamsin@stroudvalleysproject.org" class="underline hover:text-leaf">
+                <a href="mailto:tamsin@stroudvalleysproject.org" class="hover:text-leaf underline">
                     tamsin@stroudvalleysproject.org
                 </a>
                 <br />
-                <a href="tel:+441453753358" class="underline hover:text-leaf">01453 753358</a>
+                <a href="tel:+441453753358" class="hover:text-leaf underline">01453 753358</a>
             </p>
         </div>
     </SiteLayout>

@@ -23,10 +23,13 @@ const props = defineProps<{
                 {{ props.challenge }}
             </p>
             <p v-if="props.notes" class="text-step--1 mt-1 !max-w-none">{{ props.notes }}</p>
-            <p v-if="props.comment" class="text-step--1 text-leaf mt-1 italic !max-w-none">
+            <p v-if="props.comment" class="text-step--1 text-leaf mt-1 !max-w-none italic">
                 {{ props.comment }}
             </p>
-            <p v-if="props.group || props.spottedAt" class="text-step--1 text-ink-soft mt-2 !max-w-none">
+            <p
+                v-if="props.group || props.spottedAt"
+                class="text-step--1 text-ink-soft mt-2 !max-w-none"
+            >
                 <template v-if="props.group">{{ props.group }}</template>
                 <template v-if="props.group && props.spottedAt">, </template>
                 <template v-if="props.spottedAt">{{ props.spottedAt }}</template>
