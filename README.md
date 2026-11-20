@@ -18,7 +18,7 @@ tree.
 | Routing to JS | Wayfinder + Ziggy |
 | Mail | [Lettr](https://lettr.com) |
 | Errors | Bugsnag |
-| Tests | Pest 4 |
+| Tests | Pest 5 |
 | Static analysis | Larastan (level 5) + Sloppy |
 | Formatting | Pint, Prettier, ESLint |
 
