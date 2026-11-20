@@ -10,6 +10,9 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
+/**
+ * @property-read int|null $spottings_count populated by withCount()
+ */
 class Unit extends Model
 {
     /** @use HasFactory<UnitFactory> */

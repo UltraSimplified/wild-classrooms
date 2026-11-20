@@ -1,66 +1,47 @@
 <script setup lang="ts">
 import { Head, useForm } from '@inertiajs/vue3';
-import InputError from '@/Components/InputError.vue';
-import InputLabel from '@/Components/InputLabel.vue';
-import PrimaryButton from '@/Components/PrimaryButton.vue';
-import TextInput from '@/Components/TextInput.vue';
-import GuestLayout from '@/Layouts/GuestLayout.vue';
 
-defineProps<{
-    status?: string;
-}>();
+import FormField from '@/Components/FormField.vue';
+import SiteLayout from '@/Layouts/SiteLayout.vue';
 
-const form = useForm({
-    email: '',
-});
+defineProps<{ status?: string }>();
 
-const submit = () => {
-    form.post(route('password.email'));
-};
+const form = useForm({ email: '' });
+
+const submit = () => form.post('/forgot-password');
 </script>
 
 <template>
-    <GuestLayout>
-        <Head title="Forgot Password" />
+    <Head title="Forgotten password" />
 
-        <div class="mb-4 text-sm text-gray-600">
-            Forgot your password? No problem. Just let us know your email
-            address and we will email you a password reset link that will allow
-            you to choose a new one.
-        </div>
-
-        <div
-            v-if="status"
-            class="mb-4 text-sm font-medium text-green-600"
-        >
+    <SiteLayout
+        title="Forgotten your password?"
+        lede="Give us your email address and we will send you a link to set a new one."
+    >
+        <p v-if="status" role="status" class="border-leaf bg-leaf/10 mb-6 border-l-4 px-4 py-3">
             {{ status }}
-        </div>
+        </p>
 
-        <form @submit.prevent="submit">
-            <div>
-                <InputLabel for="email" value="Email" />
-
-                <TextInput
+        <form class="max-w-md space-y-5" @submit.prevent="submit">
+            <FormField label="Email" for="email" :error="form.errors.email">
+                <input
                     id="email"
-                    type="email"
-                    class="mt-1 block w-full"
                     v-model="form.email"
+                    type="email"
+                    autocomplete="username"
                     required
                     autofocus
-                    autocomplete="username"
+                    class="border-bark/40 bg-parchment mt-1 w-full border"
                 />
+            </FormField>
 
-                <InputError class="mt-2" :message="form.errors.email" />
-            </div>
-
-            <div class="mt-4 flex items-center justify-end">
-                <PrimaryButton
-                    :class="{ 'opacity-25': form.processing }"
-                    :disabled="form.processing"
-                >
-                    Email Password Reset Link
-                </PrimaryButton>
-            </div>
+            <button
+                type="submit"
+                class="bg-berry hover:bg-berry-bright px-5 py-3 font-bold text-parchment disabled:opacity-60"
+                :disabled="form.processing"
+            >
+                {{ form.processing ? 'Sending…' : 'Send the link' }}
+            </button>
         </form>
-    </GuestLayout>
+    </SiteLayout>
 </template>

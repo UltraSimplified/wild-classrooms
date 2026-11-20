@@ -1,15 +1,10 @@
 <script setup lang="ts">
 import { Head, useForm } from '@inertiajs/vue3';
-import InputError from '@/Components/InputError.vue';
-import InputLabel from '@/Components/InputLabel.vue';
-import PrimaryButton from '@/Components/PrimaryButton.vue';
-import TextInput from '@/Components/TextInput.vue';
-import GuestLayout from '@/Layouts/GuestLayout.vue';
 
-const props = defineProps<{
-    email: string;
-    token: string;
-}>();
+import FormField from '@/Components/FormField.vue';
+import SiteLayout from '@/Layouts/SiteLayout.vue';
+
+const props = defineProps<{ email: string; token: string }>();
 
 const form = useForm({
     token: props.token,
@@ -18,80 +13,67 @@ const form = useForm({
     password_confirmation: '',
 });
 
-const submit = () => {
-    form.post(route('password.store'), {
-        onFinish: () => {
-            form.reset('password', 'password_confirmation');
-        },
+const submit = () =>
+    form.post('/reset-password', {
+        onFinish: () => form.reset('password', 'password_confirmation'),
     });
-};
 </script>
 
 <template>
-    <GuestLayout>
-        <Head title="Reset Password" />
+    <Head title="Set a new password" />
 
-        <form @submit.prevent="submit">
-            <div>
-                <InputLabel for="email" value="Email" />
-
-                <TextInput
+    <SiteLayout title="Set a new password">
+        <form class="max-w-md space-y-5" @submit.prevent="submit">
+            <FormField label="Email" for="email" :error="form.errors.email">
+                <input
                     id="email"
-                    type="email"
-                    class="mt-1 block w-full"
                     v-model="form.email"
+                    type="email"
+                    autocomplete="username"
+                    required
+                    class="border-bark/40 bg-parchment mt-1 w-full border"
+                />
+            </FormField>
+
+            <FormField
+                label="New password"
+                for="password"
+                hint="At least eight characters."
+                :error="form.errors.password"
+            >
+                <input
+                    id="password"
+                    v-model="form.password"
+                    type="password"
+                    autocomplete="new-password"
                     required
                     autofocus
-                    autocomplete="username"
+                    class="border-bark/40 bg-parchment mt-1 w-full border"
                 />
+            </FormField>
 
-                <InputError class="mt-2" :message="form.errors.email" />
-            </div>
-
-            <div class="mt-4">
-                <InputLabel for="password" value="Password" />
-
-                <TextInput
-                    id="password"
-                    type="password"
-                    class="mt-1 block w-full"
-                    v-model="form.password"
-                    required
-                    autocomplete="new-password"
-                />
-
-                <InputError class="mt-2" :message="form.errors.password" />
-            </div>
-
-            <div class="mt-4">
-                <InputLabel
-                    for="password_confirmation"
-                    value="Confirm Password"
-                />
-
-                <TextInput
+            <FormField
+                label="New password again"
+                for="password_confirmation"
+                :error="form.errors.password_confirmation"
+            >
+                <input
                     id="password_confirmation"
-                    type="password"
-                    class="mt-1 block w-full"
                     v-model="form.password_confirmation"
-                    required
+                    type="password"
                     autocomplete="new-password"
+                    required
+                    class="border-bark/40 bg-parchment mt-1 w-full border"
                 />
+            </FormField>
 
-                <InputError
-                    class="mt-2"
-                    :message="form.errors.password_confirmation"
-                />
-            </div>
-
-            <div class="mt-4 flex items-center justify-end">
-                <PrimaryButton
-                    :class="{ 'opacity-25': form.processing }"
-                    :disabled="form.processing"
-                >
-                    Reset Password
-                </PrimaryButton>
-            </div>
+            <button
+                type="submit"
+                class="bg-berry hover:bg-berry-bright px-5 py-3 font-bold text-parchment disabled:opacity-60"
+                :disabled="form.processing"
+            >
+                {{ form.processing ? 'Saving…' : 'Save new password' }}
+            </button>
         </form>
-    </GuestLayout>
+    </SiteLayout>
 </template>

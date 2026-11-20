@@ -1,98 +1,68 @@
 <script setup lang="ts">
 import { Head, Link, useForm } from '@inertiajs/vue3';
-import Checkbox from '@/Components/Checkbox.vue';
-import InputError from '@/Components/InputError.vue';
-import InputLabel from '@/Components/InputLabel.vue';
-import PrimaryButton from '@/Components/PrimaryButton.vue';
-import TextInput from '@/Components/TextInput.vue';
-import GuestLayout from '@/Layouts/GuestLayout.vue';
 
-defineProps<{
-    canResetPassword?: boolean;
-    status?: string;
-}>();
+import FormField from '@/Components/FormField.vue';
+import SiteLayout from '@/Layouts/SiteLayout.vue';
 
-const form = useForm({
-    email: '',
-    password: '',
-    remember: false,
-});
+defineProps<{ canResetPassword?: boolean; status?: string }>();
 
-const submit = () => {
-    form.post(route('login'), {
-        onFinish: () => {
-            form.reset('password');
-        },
-    });
-};
+const form = useForm({ email: '', password: '', remember: false });
+
+const submit = () => form.post('/login', { onFinish: () => form.reset('password') });
 </script>
 
 <template>
-    <GuestLayout>
-        <Head title="Log in" />
+    <Head title="Log in" />
 
-        <div v-if="status" class="mb-4 text-sm font-medium text-green-600">
+    <SiteLayout title="Log in">
+        <p v-if="status" role="status" class="border-leaf bg-leaf/10 mb-6 border-l-4 px-4 py-3">
             {{ status }}
-        </div>
+        </p>
 
-        <form @submit.prevent="submit">
-            <div>
-                <InputLabel for="email" value="Email" />
-
-                <TextInput
+        <form class="max-w-md space-y-5" @submit.prevent="submit">
+            <FormField label="Email" for="email" :error="form.errors.email">
+                <input
                     id="email"
-                    type="email"
-                    class="mt-1 block w-full"
                     v-model="form.email"
+                    type="email"
+                    autocomplete="username"
                     required
                     autofocus
-                    autocomplete="username"
+                    class="border-bark/40 bg-parchment mt-1 w-full border"
                 />
+            </FormField>
 
-                <InputError class="mt-2" :message="form.errors.email" />
-            </div>
-
-            <div class="mt-4">
-                <InputLabel for="password" value="Password" />
-
-                <TextInput
+            <FormField label="Password" for="password" :error="form.errors.password">
+                <input
                     id="password"
-                    type="password"
-                    class="mt-1 block w-full"
                     v-model="form.password"
-                    required
+                    type="password"
                     autocomplete="current-password"
+                    required
+                    class="border-bark/40 bg-parchment mt-1 w-full border"
                 />
+            </FormField>
 
-                <InputError class="mt-2" :message="form.errors.password" />
-            </div>
+            <label class="flex items-center gap-2">
+                <input v-model="form.remember" type="checkbox" />
+                <span>Keep me signed in</span>
+            </label>
 
-            <div class="mt-4 block">
-                <label class="flex items-center">
-                    <Checkbox name="remember" v-model:checked="form.remember" />
-                    <span class="ms-2 text-sm text-gray-600"
-                        >Remember me</span
-                    >
-                </label>
-            </div>
-
-            <div class="mt-4 flex items-center justify-end">
-                <Link
-                    v-if="canResetPassword"
-                    :href="route('password.request')"
-                    class="rounded-md text-sm text-gray-600 underline hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-                >
-                    Forgot your password?
-                </Link>
-
-                <PrimaryButton
-                    class="ms-4"
-                    :class="{ 'opacity-25': form.processing }"
+            <div class="flex flex-wrap items-center gap-4">
+                <button
+                    type="submit"
+                    class="bg-berry hover:bg-berry-bright px-5 py-3 font-bold text-parchment disabled:opacity-60"
                     :disabled="form.processing"
                 >
-                    Log in
-                </PrimaryButton>
+                    {{ form.processing ? 'Logging in…' : 'Log in' }}
+                </button>
+
+                <Link v-if="canResetPassword" href="/forgot-password" class="underline hover:text-leaf">
+                    Forgotten your password?
+                </Link>
+
+                <Link href="/register" class="underline hover:text-leaf">Join in instead</Link>
             </div>
         </form>
-    </GuestLayout>
+    </SiteLayout>
 </template>

@@ -4,6 +4,35 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | Google Maps
+    |--------------------------------------------------------------------------
+    |
+    | A Maps browser key is necessarily visible in page source, so restrict it
+    | by HTTP referrer in the Google Cloud Console. The old site pasted this
+    | key directly into three Blade templates.
+    |
+    */
+
+    'google_maps' => [
+        'key' => env('GOOGLE_MAPS_API_KEY'),
+    ],
+
+    /*
+    |--------------------------------------------------------------------------
+    | Staff Notifications
+    |--------------------------------------------------------------------------
+    |
+    | Who hears about new registrations and new spottings. These addresses were
+    | hardcoded in two controllers, and had drifted apart: one said
+    | stroudvalleysproject.org and the other stroudvalleysproject.org.uk, so one
+    | set of those notifications was going nowhere.
+    |
+    */
+
+    'staff_notifications' => array_filter(array_map('trim', explode(',', (string) env('STAFF_NOTIFICATION_EMAILS', '')))),
+
+    /*
+    |--------------------------------------------------------------------------
     | Third Party Services
     |--------------------------------------------------------------------------
     |

@@ -8,9 +8,19 @@ use Database\Factories\SpottingFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Maize\Markable\Markable;
 use Maize\Markable\Models\Like;
 
+/**
+ * `spottings.likes` is an integer column holding the anonymous like count the
+ * old site kept, while maize-tech/laravel-markable records a signed-in user's
+ * like as a row in markable_likes. Markable registers its relation as `likes`
+ * too, which collides with the column, so the relation is declared explicitly
+ * here under a distinct name.
+ *
+ * @property-read int|null $markable_likes_count populated by withCount()
+ */
 class Spotting extends Model
 {
     /** @use HasFactory<SpottingFactory> */
@@ -46,6 +56,12 @@ class Spotting extends Model
     public function unit(): BelongsTo
     {
         return $this->belongsTo(Unit::class);
+    }
+
+    /** @return MorphMany<Like, $this> */
+    public function markableLikes(): MorphMany
+    {
+        return $this->morphMany(Like::class, 'markable');
     }
 
     /** @return BelongsTo<Challenge, $this> */

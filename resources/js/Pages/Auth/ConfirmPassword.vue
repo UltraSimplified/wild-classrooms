@@ -1,57 +1,42 @@
 <script setup lang="ts">
 import { Head, useForm } from '@inertiajs/vue3';
-import InputError from '@/Components/InputError.vue';
-import InputLabel from '@/Components/InputLabel.vue';
-import PrimaryButton from '@/Components/PrimaryButton.vue';
-import TextInput from '@/Components/TextInput.vue';
-import GuestLayout from '@/Layouts/GuestLayout.vue';
 
-const form = useForm({
-    password: '',
-});
+import FormField from '@/Components/FormField.vue';
+import SiteLayout from '@/Layouts/SiteLayout.vue';
 
-const submit = () => {
-    form.post(route('password.confirm'), {
-        onFinish: () => {
-            form.reset();
-        },
-    });
-};
+const form = useForm({ password: '' });
+
+const submit = () =>
+    form.post('/confirm-password', { onFinish: () => form.reset('password') });
 </script>
 
 <template>
-    <GuestLayout>
-        <Head title="Confirm Password" />
+    <Head title="Confirm your password" />
 
-        <div class="mb-4 text-sm text-gray-600">
-            This is a secure area of the application. Please confirm your
-            password before continuing.
-        </div>
-
-        <form @submit.prevent="submit">
-            <div>
-                <InputLabel for="password" value="Password" />
-                <TextInput
+    <SiteLayout
+        title="Confirm your password"
+        lede="Just checking it is you before you carry on."
+    >
+        <form class="max-w-md space-y-5" @submit.prevent="submit">
+            <FormField label="Password" for="password" :error="form.errors.password">
+                <input
                     id="password"
-                    type="password"
-                    class="mt-1 block w-full"
                     v-model="form.password"
-                    required
+                    type="password"
                     autocomplete="current-password"
+                    required
                     autofocus
+                    class="border-bark/40 bg-parchment mt-1 w-full border"
                 />
-                <InputError class="mt-2" :message="form.errors.password" />
-            </div>
+            </FormField>
 
-            <div class="mt-4 flex justify-end">
-                <PrimaryButton
-                    class="ms-4"
-                    :class="{ 'opacity-25': form.processing }"
-                    :disabled="form.processing"
-                >
-                    Confirm
-                </PrimaryButton>
-            </div>
+            <button
+                type="submit"
+                class="bg-berry hover:bg-berry-bright px-5 py-3 font-bold text-parchment disabled:opacity-60"
+                :disabled="form.processing"
+            >
+                Confirm
+            </button>
         </form>
-    </GuestLayout>
+    </SiteLayout>
 </template>

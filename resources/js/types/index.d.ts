@@ -1,14 +1,35 @@
-export interface User {
+export interface Member {
+    id: number;
+    title: string;
+    slug: string;
+}
+
+export interface AuthGroup {
+    id: number;
+    title: string;
+    slug: string;
+    members: Member[];
+}
+
+export interface AuthUser {
     id: number;
     name: string;
     email: string;
-    email_verified_at?: string;
+    isAdmin: boolean;
 }
 
-export type PageProps<
-    T extends Record<string, unknown> = Record<string, unknown>,
-> = T & {
+export interface PageProps {
     auth: {
-        user: User;
+        user: AuthUser | null;
+        group: AuthGroup | null;
     };
-};
+    currentMonth: {
+        number: number;
+        name: string;
+    };
+    flash: {
+        success: string | null;
+        error: string | null;
+    };
+    [key: string]: unknown;
+}

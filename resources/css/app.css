@@ -7,26 +7,106 @@
 @source '../**/*.vue';
 
 /*
- * Wild Classrooms' identity comes from the old Foundation theme: a woodland
- * green, parchment cream, and IM Fell English for display text. Carried over
- * as tokens so the Vue components share one palette instead of the inline
- * styles the Blade views used.
+ * Wild Classrooms
+ *
+ * The greens and browns below are sampled from the fill values in the tree and
+ * leaf SVGs (resources/svg), so the interface and the hand-drawn artwork share
+ * one palette rather than approximating each other.
+ *
+ * Display type is IM Fell English, a 17th-century English face that suits a
+ * natural-history subject. Body type is Atkinson Hyperlegible, designed by the
+ * Braille Institute for legibility — this site is read by children.
  */
 @theme {
-    --color-woodland-50: oklch(0.97 0.02 145);
-    --color-woodland-100: oklch(0.94 0.04 145);
-    --color-woodland-200: oklch(0.88 0.06 145);
-    --color-woodland-300: oklch(0.8 0.08 145);
-    --color-woodland-400: oklch(0.72 0.1 145);
-    --color-woodland-500: oklch(0.64 0.11 145);
-    --color-woodland-600: oklch(0.54 0.1 145);
-    --color-woodland-700: oklch(0.44 0.08 145);
-    --color-woodland-800: oklch(0.34 0.06 145);
-    --color-woodland-900: oklch(0.26 0.04 145);
+    /* Sampled from the artwork */
+    --color-leaf: #6e9d03;        /* leaf front face */
+    --color-leaf-pale: #8cab46;   /* leaf underside */
+    --color-leaf-deep: #0a3309;   /* leaf outline */
+    --color-bark: #8f785c;        /* trunk */
+    --color-bark-deep: #4e3f2d;   /* signpost timber */
 
-    --color-parchment: oklch(0.96 0.02 85);
-    --color-bark: oklch(0.35 0.03 60);
+    /* Ground and ink */
+    --color-parchment: #f2ead6;
+    --color-parchment-deep: #e6dabe;
+    --color-ink: #27331f;
+    --color-ink-soft: #5a6450;
+
+    /* The one accent: a hedgerow berry */
+    --color-berry: #8c2f39;
+    --color-berry-bright: #a83a45;
 
     --font-display: 'IM Fell English', ui-serif, Georgia, serif;
-    --font-sans: 'Open Sans', ui-sans-serif, system-ui, sans-serif;
+    --font-sans: 'Atkinson Hyperlegible', ui-sans-serif, system-ui, sans-serif;
+
+    /* A modest type scale; display sizes get tighter leading in .u-display */
+    --text-step--1: 0.875rem;
+    --text-step-0: 1.0625rem;
+    --text-step-1: 1.333rem;
+    --text-step-2: 1.777rem;
+    --text-step-3: 2.369rem;
+    --text-step-4: 3.157rem;
+}
+
+@layer base {
+    html {
+        background-color: var(--color-parchment);
+    }
+
+    body {
+        background-color: var(--color-parchment);
+        color: var(--color-ink);
+        font-family: var(--font-sans);
+        font-size: var(--text-step-0);
+        line-height: 1.6;
+        -webkit-font-smoothing: antialiased;
+    }
+
+    /* Keep measure under ~70 characters for young readers. */
+    p {
+        max-width: 64ch;
+    }
+
+    :focus-visible {
+        outline: 3px solid var(--color-berry);
+        outline-offset: 2px;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        *,
+        *::before,
+        *::after {
+            animation-duration: 0.01ms !important;
+            transition-duration: 0.01ms !important;
+        }
+    }
+}
+
+@utility u-display {
+    font-family: var(--font-display);
+    line-height: 1.1;
+    letter-spacing: 0.01em;
+}
+
+/*
+ * The parchment ground. A faint fibre texture rather than a drop shadow —
+ * this site is paper and timber, not floating cards.
+ */
+@utility u-paper {
+    background-color: var(--color-parchment);
+    background-image:
+        radial-gradient(circle at 20% 30%, rgb(39 51 31 / 0.025) 0 1px, transparent 1px),
+        radial-gradient(circle at 70% 60%, rgb(39 51 31 / 0.02) 0 1px, transparent 1px);
+    background-size: 7px 7px, 11px 11px;
+}
+
+/* A sawn-timber edge, used where the old site used a wood-grain bar. */
+@utility u-timber {
+    background-color: var(--color-bark-deep);
+    background-image: repeating-linear-gradient(
+        90deg,
+        rgb(0 0 0 / 0.12) 0 2px,
+        transparent 2px 7px,
+        rgb(255 255 255 / 0.04) 7px 8px,
+        transparent 8px 19px
+    );
 }
