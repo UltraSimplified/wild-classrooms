@@ -162,8 +162,41 @@ php artisan app:repair-text-encoding             # apply
 ```
 
 Safe to run more than once, and it only touches values that are already
-invalid. Worth running against production regardless of this port: those
-characters are wrong on the live site today.
+invalid.
+
+**Whether you need it depends on how the data arrives.** A phpMyAdmin export
+of production (`wildsvp_classes.sql.gz`, 2026-11-20) turned out to be clean:
+it had converted every `0x92` to a proper UTF-8 apostrophe on the way out, and
+checking for mojibake (`Ã`/`Â` sequences) across every text column found none,
+so it had not damaged the values that were already correct. Importing that
+dump needs no repair afterwards — verified, the command reports nothing to do.
+
+So:
+
+- **Restoring from a dump** — nothing to run. The export fixes it.
+- **Pointing the new app at the existing production database** — run it first,
+  or every page is blank.
+
+Either way the characters are wrong in the live database today, so the repair
+is still worth running there.
+
+## The local database
+
+`nwc_data` on `BLANC` is a working copy of production, imported 2026-11-20.
+The dump's rows were loaded into the schema this repo's migration creates,
+rather than letting the dump build its own tables — which is a real check on
+that migration, since all 18 tables' columns were accepted with nothing
+dropped and every row count matches production (207 users, 91 groups, 266
+units, 961 spottings, 61 challenges, 44 likes).
+
+Two of the dump's tables were deliberately left out: `migrations`, so Laravel
+keeps the state the new consolidated migration created rather than
+production's old 62-row list, and `password_resets`, which modern Laravel
+replaced with `password_reset_tokens` and which only ever holds expiring
+tokens.
+
+Note that production runs **MyISAM**; the migrated schema is InnoDB, so the
+copy has real foreign keys where production has none.
 
 ## Still to do
 
