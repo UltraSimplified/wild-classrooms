@@ -1,0 +1,32 @@
+@import 'tailwindcss';
+@plugin '@tailwindcss/forms';
+
+@source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
+@source '../../storage/framework/views/*.php';
+@source '../**/*.blade.php';
+@source '../**/*.vue';
+
+/*
+ * Wild Classrooms' identity comes from the old Foundation theme: a woodland
+ * green, parchment cream, and IM Fell English for display text. Carried over
+ * as tokens so the Vue components share one palette instead of the inline
+ * styles the Blade views used.
+ */
+@theme {
+    --color-woodland-50: oklch(0.97 0.02 145);
+    --color-woodland-100: oklch(0.94 0.04 145);
+    --color-woodland-200: oklch(0.88 0.06 145);
+    --color-woodland-300: oklch(0.8 0.08 145);
+    --color-woodland-400: oklch(0.72 0.1 145);
+    --color-woodland-500: oklch(0.64 0.11 145);
+    --color-woodland-600: oklch(0.54 0.1 145);
+    --color-woodland-700: oklch(0.44 0.08 145);
+    --color-woodland-800: oklch(0.34 0.06 145);
+    --color-woodland-900: oklch(0.26 0.04 145);
+
+    --color-parchment: oklch(0.96 0.02 85);
+    --color-bark: oklch(0.35 0.03 60);
+
+    --font-display: 'IM Fell English', ui-serif, Georgia, serif;
+    --font-sans: 'Open Sans', ui-sans-serif, system-ui, sans-serif;
+}
