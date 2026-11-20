@@ -3,6 +3,7 @@ import { Head, router, useForm } from '@inertiajs/vue3';
 import { computed } from 'vue';
 
 import FormField from '@/Components/FormField.vue';
+import MediaImage from '@/Components/MediaImage.vue';
 import SiteLayout from '@/Layouts/SiteLayout.vue';
 
 const props = defineProps<{
@@ -87,7 +88,7 @@ const destroy = () => {
 
             <div v-if="props.spotting.picture">
                 <p class="font-bold">Current photo</p>
-                <img
+                <MediaImage
                     :src="props.spotting.picture"
                     alt="The photo on this spotting"
                     class="border-bark/30 mt-1 max-w-xs border"

@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { Head, Link } from '@inertiajs/vue3';
 
+import MediaImage from '@/Components/MediaImage.vue';
 import SiteLayout from '@/Layouts/SiteLayout.vue';
 
 const props = defineProps<{
@@ -28,11 +29,11 @@ const props = defineProps<{
                 {{ props.post.postedAt }}<template v-if="props.post.author">, by {{ props.post.author }}</template>
             </p>
 
-            <img
-                v-if="props.post.image"
+            <MediaImage
                 :src="props.post.image"
                 :alt="props.post.title"
                 class="border-bark/30 mt-6 w-full border"
+                loading="eager"
             />
 
             <div v-if="props.post.intro" class="text-step-1 prose-wc mt-6" v-html="props.post.intro" />

@@ -1,7 +1,8 @@
 <script setup lang="ts">
 import { Head, Link, usePage } from '@inertiajs/vue3';
-import { computed } from 'vue';
+import { computed, reactive } from 'vue';
 
+import MediaImage from '@/Components/MediaImage.vue';
 import SpeciesCard from '@/Components/SpeciesCard.vue';
 import SiteLayout from '@/Layouts/SiteLayout.vue';
 import type { PageProps } from '@/types';
@@ -32,6 +33,10 @@ const props = defineProps<{
 }>();
 
 const page = usePage<PageProps>();
+
+// Featured photos whose file turned out to be missing. The photo is the whole
+// card here, so the link goes with it rather than leaving an empty box.
+const missing = reactive(new Set<number>());
 
 const thisMonth = computed(() =>
     props.challenges.filter((c) => c.month === page.props.currentMonth.number),
@@ -137,18 +142,18 @@ const heroTreeAlt = computed(() =>
             <div class="mt-6 columns-2 gap-4 md:columns-3 lg:columns-4 [&>*]:mb-4">
                 <Link
                     v-for="spotting in props.featured"
+                    v-show="!missing.has(spotting.id)"
                     :key="spotting.id"
                     :href="
                         spotting.challengeId ? `/spottings/${spotting.challengeId}` : '/gallery'
                     "
                     class="block break-inside-avoid"
                 >
-                    <img
-                        v-if="spotting.picture"
+                    <MediaImage
                         :src="spotting.picture"
                         :alt="spotting.challenge ?? 'A spotting'"
                         class="border-bark/30 w-full border"
-                        loading="lazy"
+                        @missing="missing.add(spotting.id)"
                     />
                 </Link>
             </div>

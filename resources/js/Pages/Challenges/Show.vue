@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { Head, Link, usePage } from '@inertiajs/vue3';
 
+import MediaImage from '@/Components/MediaImage.vue';
 import SpottingPhoto from '@/Components/SpottingPhoto.vue';
 import SiteLayout from '@/Layouts/SiteLayout.vue';
 import type { PageProps } from '@/types';
@@ -41,11 +42,11 @@ const page = usePage<PageProps>();
     <SiteLayout>
         <article class="grid gap-10 md:grid-cols-5">
             <div class="md:col-span-2">
-                <img
-                    v-if="props.challenge.image"
+                <MediaImage
                     :src="props.challenge.image"
                     :alt="props.challenge.imageName ?? props.challenge.title"
                     class="border-bark/30 w-full border"
+                    loading="eager"
                 />
                 <p v-if="props.challenge.credit" class="text-step--1 text-ink-soft mt-2">
                     Photo by {{ props.challenge.credit }}

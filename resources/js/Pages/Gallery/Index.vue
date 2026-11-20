@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { Head, Link, router, usePage } from '@inertiajs/vue3';
 
+import MediaImage from '@/Components/MediaImage.vue';
 import SiteLayout from '@/Layouts/SiteLayout.vue';
 import type { PageProps } from '@/types';
 
@@ -45,12 +46,10 @@ const like = (spotting: GallerySpotting) => {
                 class="border-bark/30 bg-parchment-deep/40 break-inside-avoid border"
             >
                 <Link v-if="spotting.challengeId" :href="`/spottings/${spotting.challengeId}`">
-                    <img
-                        v-if="spotting.picture"
+                    <MediaImage
                         :src="spotting.picture"
                         :alt="spotting.challenge ?? 'A spotting'"
                         class="w-full"
-                        loading="lazy"
                     />
                 </Link>
 

@@ -1,5 +1,8 @@
 <script setup lang="ts">
 import { Link } from '@inertiajs/vue3';
+import { ref } from 'vue';
+
+import MediaImage from '@/Components/MediaImage.vue';
 
 /*
  * One species to find. Styled as a pinned specimen label rather than a generic
@@ -15,6 +18,10 @@ const props = defineProps<{
     category?: string | null;
     spotted?: boolean;
 }>();
+
+// A photo whose file has gone falls back to the same placeholder as a species
+// that never had one.
+const photoMissing = ref(false);
 </script>
 
 <template>
@@ -23,12 +30,12 @@ const props = defineProps<{
         :class="props.spotted ? 'border-leaf' : ''"
     >
         <Link :href="`/spottings/${props.id}/${props.slug}`" class="block">
-            <img
-                v-if="props.image"
+            <MediaImage
+                v-if="props.image && !photoMissing"
                 :src="props.image"
                 :alt="props.title"
                 class="aspect-4/3 w-full object-cover"
-                loading="lazy"
+                @missing="photoMissing = true"
             />
             <div
                 v-else

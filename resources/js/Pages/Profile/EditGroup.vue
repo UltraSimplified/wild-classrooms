@@ -2,6 +2,7 @@
 import { Head, Link, useForm } from '@inertiajs/vue3';
 
 import GroupFields from '@/Components/GroupFields.vue';
+import MediaImage from '@/Components/MediaImage.vue';
 import SiteLayout from '@/Layouts/SiteLayout.vue';
 
 interface Member {
@@ -63,8 +64,7 @@ const spottingsFor = (id: number | null) =>
 
     <SiteLayout title="Edit your group">
         <form class="max-w-2xl space-y-6" enctype="multipart/form-data" @submit.prevent="submit">
-            <img
-                v-if="props.group.image"
+            <MediaImage
                 :src="props.group.image"
                 alt="Your group's photo"
                 class="border-bark/30 max-w-xs border"

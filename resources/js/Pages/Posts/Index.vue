@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { Head, Link } from '@inertiajs/vue3';
 
+import MediaImage from '@/Components/MediaImage.vue';
 import SiteLayout from '@/Layouts/SiteLayout.vue';
 
 defineProps<{
@@ -24,12 +25,10 @@ defineProps<{
         <div class="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
             <article v-for="post in posts" :key="post.id" class="border-bark/30 border">
                 <Link :href="`/dig-deeper/view/${post.id}/${post.slug}`">
-                    <img
-                        v-if="post.image"
+                    <MediaImage
                         :src="post.image"
                         :alt="post.title"
                         class="aspect-16/9 w-full object-cover"
-                        loading="lazy"
                     />
                 </Link>
                 <div class="p-4">

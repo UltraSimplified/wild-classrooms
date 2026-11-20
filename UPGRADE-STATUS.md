@@ -141,13 +141,20 @@ covered by tests in `tests/Feature/AuthorizationTest.php`.
 
 Content pasted from Word over the years was stored as Windows-1252 in UTF-8
 columns, so a curly apostrophe is a lone `0x92` byte rather than the three
-bytes UTF-8 needs. "Old Man’s Beard" is the obvious one. There are 90 such
-values: 52 in challenges, 26 in spottings, 9 in posts, 2 in units, 1 in groups.
+bytes UTF-8 needs. "Old Man’s Beard" is the obvious one. There are 91 such
+values: 52 in challenges, 27 in spottings, 9 in posts, 2 in units, 1 in groups.
 
 The old Blade site rendered them as a replacement character, so it looked like
 a typo. Inertia cannot survive them: `json_encode` refuses invalid UTF-8, the
 page object comes through empty, and the Vue app fails to mount — a blank
 page, not a broken character.
+
+One of those values is not prose at all. `spottings.picture` on row 671 holds
+`/uploads/1605045557-Old Man\x92s Beard.jpg`, while the file on the live server
+is named with a proper UTF-8 apostrophe — so that photo has been broken on the
+live site for years and the repair fixes it. The command reads its columns from
+the schema rather than a list, which is how that one was found: a list only
+covers the columns someone thought of.
 
 ```bash
 php artisan app:repair-text-encoding --dry-run   # report

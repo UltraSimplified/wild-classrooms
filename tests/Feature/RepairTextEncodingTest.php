@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 use App\Models\Challenge;
 use App\Models\Group;
+use App\Models\Spotting;
+use App\Models\User;
 use Illuminate\Support\Facades\DB;
 use Inertia\Testing\AssertableInertia;
 
@@ -87,4 +89,36 @@ it('renders a page whose text came from windows-1252 without blanking it', funct
                     && mb_check_encoding($title, 'UTF-8'),
             )
         );
+});
+
+it('repairs any text column, not a list someone remembered to write down', function (): void {
+    // spottings.picture is the case that proves the point: the bad byte sits
+    // inside a *filename*, so the row pointed at a file that does not exist
+    // while the real one on disk is named with a proper UTF-8 apostrophe. An
+    // earlier version of this command carried a hand-written column list and
+    // walked straight past it.
+    $spotting = Spotting::factory()->create();
+
+    DB::table('spottings')->where('id', $spotting->id)
+        ->update(['picture' => "/uploads/Old Man\x92s Beard.jpg"]);
+
+    $this->artisan('app:repair-text-encoding')->assertSuccessful();
+
+    expect(DB::table('spottings')->where('id', $spotting->id)->value('picture'))
+        ->toBe('/uploads/Old Man’s Beard.jpg');
+});
+
+it('leaves credentials alone', function (): void {
+    // Always ASCII in practice, so this is about intent: a password hash is
+    // not prose and must never be rewritten by a text repair.
+    $user = User::factory()->create();
+    $hash = DB::table('users')->where('id', $user->id)->value('password');
+
+    DB::table('users')->where('id', $user->id)
+        ->update(['name' => legacyApostropheText()]);
+
+    $this->artisan('app:repair-text-encoding')->assertSuccessful();
+
+    expect(DB::table('users')->where('id', $user->id)->value('password'))->toBe($hash)
+        ->and(DB::table('users')->where('id', $user->id)->value('name'))->toBe('Old Man’s Beard');
 });

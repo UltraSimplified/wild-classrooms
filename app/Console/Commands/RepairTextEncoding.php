@@ -18,6 +18,13 @@ use Illuminate\Support\Facades\Schema;
  * Inertia one cannot render the page at all, because json_encode refuses
  * invalid UTF-8 and the client then has no page object to mount.
  *
+ * The columns are read from the schema rather than listed here. An earlier
+ * version carried a hand-written list and missed `spottings.picture`, where
+ * the bad byte is inside a *filename* — the row pointed at
+ * "Old Man\x92s Beard.jpg" while the file on disk is named with a proper UTF-8
+ * apostrophe, so that photo had been broken on the live site for years. A list
+ * only ever covers the columns someone thought of.
+ *
  * Safe to run more than once: anything already valid UTF-8 is left alone.
  */
 class RepairTextEncoding extends Command
@@ -27,21 +34,28 @@ class RepairTextEncoding extends Command
     protected $description = 'Convert legacy Windows-1252 text to UTF-8';
 
     /**
-     * The text columns worth checking, by table.
+     * Framework, queue and Nova tables. They hold serialised payloads, tokens
+     * and cache entries rather than anything a person typed, so there is
+     * nothing here to repair and a rewrite could only do harm.
      *
-     * @var array<string, list<string>>
+     * @var list<string>
      */
-    private const COLUMNS = [
-        'challenges' => ['title', 'plural', 'teaser', 'description', 'where_to_find_them', 'credit', 'image_name'],
-        'categories' => ['title'],
-        'spottings' => ['notes', 'owner', 'location', 'comment', 'campaign'],
-        'groups' => ['title', 'description', 'address_line_1', 'address_line_2', 'city', 'county'],
-        'units' => ['title', 'description'],
-        'posts' => ['title', 'intro', 'content'],
-        'users' => ['name'],
-        'schools' => ['school', 'statement', 'head', 'address_line_1', 'city'],
-        'classrooms' => ['teacher'],
-        'static_pages' => ['name', 'title', 'attributes'],
+    private const SKIP_TABLES = [
+        'action_events', 'cache', 'cache_locks', 'failed_jobs', 'job_batches',
+        'jobs', 'migrations', 'nova_field_attachments', 'nova_notifications',
+        'nova_pending_field_attachments', 'passkeys', 'password_reset_tokens',
+        'personal_access_tokens', 'sessions',
+    ];
+
+    /**
+     * Credentials and secrets. Always ASCII, so they would never match anyway,
+     * but they are named here so that no future schema change can draw them in.
+     *
+     * @var list<string>
+     */
+    private const SKIP_COLUMNS = [
+        'password', 'remember_token', 'two_factor_secret',
+        'two_factor_recovery_codes', 'payload', 'credential_id', 'public_key',
     ];
 
     public function handle(): int
@@ -49,21 +63,18 @@ class RepairTextEncoding extends Command
         $dryRun = (bool) $this->option('dry-run');
         $total = 0;
 
-        foreach (self::COLUMNS as $table => $columns) {
-            if (! Schema::hasTable($table)) {
+        foreach (Schema::getTableListing(schemaQualified: false) as $table) {
+            if (in_array($table, self::SKIP_TABLES, true)) {
                 continue;
             }
 
-            $present = array_values(array_filter(
-                $columns,
-                fn (string $column): bool => Schema::hasColumn($table, $column)
-            ));
+            $columns = $this->textColumns($table);
 
-            if ($present === []) {
+            if ($columns === [] || ! Schema::hasColumn($table, 'id')) {
                 continue;
             }
 
-            $repaired = $this->repairTable($table, $present, $dryRun);
+            $repaired = $this->repairTable($table, $columns, $dryRun);
 
             if ($repaired > 0) {
                 $this->line(sprintf('  %-14s %d value%s', $table, $repaired, $repaired === 1 ? '' : 's'));
@@ -78,11 +89,41 @@ class RepairTextEncoding extends Command
         }
 
         $this->newLine();
+        $values = $total === 1 ? 'value' : 'values';
         $this->info($dryRun
-            ? "{$total} values would be repaired. Run without --dry-run to apply."
-            : "Repaired {$total} values.");
+            ? "{$total} {$values} would be repaired. Run without --dry-run to apply."
+            : "Repaired {$total} {$values}.");
 
         return self::SUCCESS;
+    }
+
+    /**
+     * Every column on the table that can hold text, straight from the schema.
+     *
+     * @return list<string>
+     */
+    private function textColumns(string $table): array
+    {
+        $columns = [];
+
+        foreach (Schema::getColumns($table) as $column) {
+            $type = strtolower($column['type_name']);
+
+            // char/varchar/text/mediumtext/longtext/clob/json. Binary types
+            // (blob, varbinary) are deliberately not matched: the bytes there
+            // are not meant to be text and must not be rewritten.
+            if (preg_match('/^(.*char.*|.*text|clob|json|string)$/', $type) !== 1) {
+                continue;
+            }
+
+            if (in_array($column['name'], self::SKIP_COLUMNS, true)) {
+                continue;
+            }
+
+            $columns[] = $column['name'];
+        }
+
+        return $columns;
     }
 
     /**

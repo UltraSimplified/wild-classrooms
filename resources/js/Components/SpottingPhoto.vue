@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import MediaImage from '@/Components/MediaImage.vue';
+
 const props = defineProps<{
     picture?: string | null;
     notes?: string | null;
@@ -11,12 +13,10 @@ const props = defineProps<{
 
 <template>
     <figure class="border-bark/30 bg-parchment-deep/40 border">
-        <img
-            v-if="props.picture"
+        <MediaImage
             :src="props.picture"
             :alt="props.challenge ?? 'A spotting'"
             class="w-full object-cover"
-            loading="lazy"
         />
         <figcaption class="p-3">
             <p v-if="props.challenge" class="u-display text-step-0 !max-w-none">
