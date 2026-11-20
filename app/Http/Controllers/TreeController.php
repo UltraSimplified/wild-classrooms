@@ -8,13 +8,15 @@ use App\Models\Spotting;
 use App\Models\Unit;
 use App\Services\Trees\SignRenderer;
 use App\Services\Trees\TreeRenderer;
+use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 
 /**
  * Serves the woodland artwork as SVG images.
  *
  * These stay plain image endpoints rather than Inertia pages: the browser
- * requests them with <img src>, and they are cacheable.
+ * asks for them with <img src>, and they are the same bytes for everyone
+ * looking at the same member.
  */
 class TreeController extends Controller
 {
@@ -23,12 +25,12 @@ class TreeController extends Controller
         private readonly SignRenderer $signs,
     ) {}
 
-    public function tree(?Unit $unit = null): Response
+    public function tree(Request $request, ?Unit $unit = null): Response
     {
         // With no member named, draw a finished tree. That is what the home
         // page shows a visitor who has not planted one yet.
         if ($unit === null) {
-            return $this->svg($this->trees->renderComplete());
+            return $this->svg($request, $this->trees->renderComplete());
         }
 
         $spottings = Spotting::query()
@@ -36,19 +38,33 @@ class TreeController extends Controller
             ->where('unit_id', $unit->getKey())
             ->get();
 
-        return $this->svg($this->trees->render($spottings));
+        return $this->svg($request, $this->trees->render($spottings));
     }
 
-    public function sign(Unit $unit): Response
+    public function sign(Request $request, Unit $unit): Response
     {
-        return $this->svg($this->signs->render((string) $unit->title));
+        return $this->svg($request, $this->signs->render((string) $unit->title));
     }
 
-    private function svg(string $svg): Response
+    /**
+     * Return the drawing, letting the browser reuse its copy only while the
+     * drawing has not changed.
+     *
+     * A plain max-age would be wrong here: adding a spotting grows a leaf, and
+     * the child who just added it would keep seeing the old tree until the
+     * cache expired. An ETag means the browser still asks every time, but gets
+     * an empty 304 back whenever nothing has changed.
+     */
+    private function svg(Request $request, string $svg): Response
     {
-        return response($svg, 200, [
+        $response = response($svg, 200, [
             'Content-Type' => 'image/svg+xml',
-            'Cache-Control' => 'public, max-age=300',
+            'Cache-Control' => 'no-cache, private',
         ]);
+
+        $response->setEtag(md5($svg));
+        $response->isNotModified($request);
+
+        return $response;
     }
 }

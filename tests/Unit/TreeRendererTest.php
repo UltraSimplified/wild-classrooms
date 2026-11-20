@@ -77,3 +77,18 @@ it('draws one leaf however many times the same challenge is spotted', function (
 
     expect(substr_count($this->renderer->render($spottings), 'id="Jan_L_1"'))->toBe(1);
 });
+
+it('uses a viewBox that fits the whole drawing', function (): void {
+    // The original artwork declared viewBox="0 0 1200 1200" while the fully
+    // leafed tree actually spans x 370..1231, so the rightmost branches were
+    // clipped — on the old site too. Measured in a browser with getBBox();
+    // this guards the corrected box rather than re-measuring it.
+    $svg = $this->renderer->renderComplete();
+
+    expect($svg)->toContain('viewBox="360 10 881 1181"')
+        ->and($svg)->not->toContain('viewBox="0 0 1200 1200"');
+});
+
+it('puts every leaf on the complete tree', function (): void {
+    expect(substr_count($this->renderer->renderComplete(), '_L_'))->toBe(60);
+});
