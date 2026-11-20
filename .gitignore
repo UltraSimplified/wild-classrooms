@@ -4,6 +4,7 @@
 /public/build
 /public/hot
 /public/storage
+/public/uploads
 /public/vendor/nova
 /lang/vendor/nova
 /resources/js/actions
