@@ -21,6 +21,26 @@ use Illuminate\Database\Seeder;
  */
 class DatabaseSeeder extends Seeder
 {
+    /**
+     * Sixty species, so a seeded year looks like a real one. These are only
+     * names: the photos come from whatever is in public/uploads.
+     *
+     * @var list<string>
+     */
+    private const SPECIES = [
+        'Robin', 'Blackbird', 'Wren', 'Blue Tit', 'Goldfinch', 'Starling',
+        'Song Thrush', 'Chaffinch', 'Magpie', 'Jackdaw', 'Nuthatch', 'Treecreeper',
+        'Oak', 'Ash', 'Beech', 'Silver Birch', 'Hazel', 'Rowan',
+        'Dogwood', 'Elder', 'Holly', 'Ivy', 'Hawthorn', 'Blackthorn',
+        'Bluebell', 'Cow Parsley', 'Snowdrop', 'Foxglove', 'Primrose', 'Dog Rose',
+        'Nettle', 'Dandelion', 'Daisy', 'Buttercup', 'Clover', 'Yarrow',
+        'Ladybird', 'Woodlouse', 'Earthworm', 'Garden Snail', 'Bumblebee', 'Centipede',
+        'Devil\'s Coach Horse', 'Harvestman', 'Froghopper', 'Shieldbug', 'Lacewing', 'Springtail',
+        'Peacock Butterfly', 'Small Copper', 'Red Admiral', 'Brimstone',
+        'Orange Tip', 'Elephant Hawk-moth', 'Speckled Wood', 'Comma',
+        'Six-spot Burnet', 'Cinnabar Moth', 'Silver Y', 'Mother Shipton',
+    ];
+
     public function run(): void
     {
         $admin = Role::firstOrCreate(['name' => 'admin']);
@@ -29,14 +49,21 @@ class DatabaseSeeder extends Seeder
         $categories = collect(['Trees', 'Birds', 'Butterflies & moths', 'Minibeasts', 'Plants'])
             ->map(fn (string $title): Category => Category::factory()->create(['title' => $title]));
 
-        // Production has exactly one challenge per category per month.
+        // Production has exactly one challenge per category per month, each a
+        // different species: 12 x 5 = 60.
+        $species = collect(self::SPECIES)->shuffle()->values();
         $challenges = collect();
+        $index = 0;
 
         foreach (range(1, 12) as $month) {
             foreach ($categories as $category) {
+                $name = $species[$index++];
+
                 $challenges->push(Challenge::factory()->create([
                     'category_id' => $category->getKey(),
                     'month' => $month,
+                    'title' => $name,
+                    'plural' => $name.'s',
                 ]));
             }
         }
