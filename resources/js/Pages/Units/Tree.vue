@@ -80,7 +80,11 @@ const previousMonth = computed(() => (props.month === 1 ? 12 : props.month - 1))
             </div>
 
             <div class="md:col-span-2">
-                <CategoryProgress :month-abbreviation="abbreviation" :spotted="props.spotted" />
+                <CategoryProgress
+                    :month-abbreviation="abbreviation"
+                    :month-name="props.monthName"
+                    :spotted="props.spotted"
+                />
 
                 <p class="text-step--1 text-ink-soft mt-3">
                     A leaf appears on the tree for each category found, in each month.

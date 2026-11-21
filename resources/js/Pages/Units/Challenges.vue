@@ -36,7 +36,11 @@ const spottedCategories = computed(() => props.spotted[abbreviation.value] ?? {}
     <SiteLayout :title="`${props.unit.title} — ${props.monthName}`">
         <div class="grid gap-8 md:grid-cols-4">
             <div class="md:col-span-1">
-                <CategoryProgress :month-abbreviation="abbreviation" :spotted="props.spotted" />
+                <CategoryProgress
+                    :month-abbreviation="abbreviation"
+                    :month-name="props.monthName"
+                    :spotted="props.spotted"
+                />
                 <p class="mt-4">
                     <Link
                         :href="`/tree/${props.unit.id}/${props.unit.slug}`"

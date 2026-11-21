@@ -64,24 +64,32 @@ const props = defineProps<{
                         class="group block"
                         :aria-label="`${member.title}'s tree, ${member.spottings} spottings`"
                     >
+                        <!--
+                            The name board stands at ground level in front of
+                            the tree, which is set over to the right and a
+                            little behind it. It sits low enough that the
+                            ground at the foot of the tree — fallen leaves in
+                            autumn, a drift in winter — still shows. The board
+                            is the name label, so the name is not repeated as
+                            text below. Its offsets are percentages, which CSS
+                            resolves against width, so the arrangement holds
+                            at every card size.
+                        -->
                         <img
                             :src="`/tree.svg/${member.id}`"
                             :alt="''"
                             aria-hidden="true"
-                            class="w-full"
+                            class="ml-auto block w-[82%]"
                             loading="lazy"
                         />
                         <img
                             :src="`/sign.svg/${member.id}`"
                             :alt="''"
                             aria-hidden="true"
-                            class="mx-auto -mt-3 w-24"
+                            class="relative -mt-[3%] ml-[4%] block w-[56%]"
                             loading="lazy"
                         />
-                        <span class="u-display text-step-0 group-hover:text-leaf block">
-                            {{ member.title }}
-                        </span>
-                        <span class="text-step--1 text-ink-soft">
+                        <span class="text-step--1 text-ink-soft group-hover:text-leaf mt-2 block">
                             {{ member.spottings }}
                             {{ member.spottings === 1 ? 'spotting' : 'spottings' }}
                         </span>

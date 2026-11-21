@@ -7,9 +7,14 @@ import { computed } from 'vue';
  * member's page: it maps one-to-one onto the leaf-per-category mechanic, so a
  * filled row means a fully leafed month. Not a progress bar — the tree is the
  * progress indicator.
+ *
+ * The heading names the month because the tree beside it does not: a tree
+ * carrying a dozen leaves from earlier months next to "0 of 5 found" reads as
+ * a contradiction until you know the count is for one month only.
  */
 const props = defineProps<{
     monthAbbreviation: string;
+    monthName: string;
     spotted: Record<string, Record<string, boolean>>;
     categories?: string[];
 }>();
@@ -30,7 +35,9 @@ const total = computed(() => rows.value.filter((r) => r.found).length);
 
 <template>
     <div class="border-bark/30 bg-parchment-deep/40 border p-4">
-        <h3 class="u-display text-step-1">{{ total }} of {{ rows.length }} found</h3>
+        <h3 class="u-display text-step-1">
+            {{ total }} of {{ rows.length }} found in {{ props.monthName }}
+        </h3>
 
         <ul class="mt-3 space-y-1.5">
             <li

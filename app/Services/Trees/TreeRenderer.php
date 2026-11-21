@@ -14,6 +14,10 @@ use Illuminate\Support\Collection;
  * something in: 12 months x 5 categories = 60 leaves, each a fixed piece of
  * artwork positioned on the trunk. The artwork lives in resources/svg and was
  * lifted verbatim from the old controller, which held all of it inline.
+ *
+ * The artwork itself is fixed, so the seasons are applied over the top of it:
+ * see Season for what each one does. The drawing therefore changes on its own
+ * four times a year without anybody editing anything.
  */
 final class TreeRenderer
 {
@@ -25,9 +29,9 @@ final class TreeRenderer
      *
      * @param  Collection<int, Spotting>  $spottings
      */
-    public function render(Collection $spottings): string
+    public function render(Collection $spottings, ?Season $season = null): string
     {
-        return $this->wrap($this->leavesFor($spottings));
+        return $this->wrap($this->leavesFor($spottings), $season ?? $this->currentSeason());
     }
 
     /**
@@ -36,7 +40,7 @@ final class TreeRenderer
      * The home page shows this to visitors who have no tree of their own yet —
      * a bare tree is the honest starting state but a poor advertisement.
      */
-    public function renderComplete(): string
+    public function renderComplete(?Season $season = null): string
     {
         $svg = '';
 
@@ -44,14 +48,33 @@ final class TreeRenderer
             $svg .= implode('', $categories);
         }
 
-        return $this->wrap($svg);
+        return $this->wrap($svg, $season ?? $this->currentSeason());
     }
 
-    private function wrap(string $leaves): string
+    private function currentSeason(): Season
     {
+        return Season::forMonth((int) now()->format('n'));
+    }
+
+    /*
+     * The trunk is drawn after the leaves, so it covers the ends of the ones
+     * tucked behind it. That order is part of the artwork and is kept.
+     */
+    private function wrap(string $leaves, Season $season): string
+    {
+        $recolour = $season->recolour();
+
+        if ($recolour !== []) {
+            $leaves = str_replace(array_keys($recolour), array_values($recolour), $leaves);
+        }
+
+        $style = $season->leafStyle();
+
         return $this->asset('tree-head.svg')
-            .$leaves
-            .$this->asset('tree-tree.svg')
+            .($style === '' ? '' : '<style>'.$style.'</style>')
+            .'<g class="wc-leaves">'.$leaves.'</g>'
+            .'<g class="wc-trunk">'.$this->asset('tree-tree.svg').'</g>'
+            .$season->ground()
             .$this->asset('tree-foot.svg');
     }
 
