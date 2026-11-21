@@ -6,6 +6,8 @@ use App\Models\Category;
 use App\Models\Challenge;
 use App\Models\Spotting;
 use App\Models\Unit;
+use App\Services\Trees\Season;
+use App\Services\Trees\TreeRenderer;
 use Illuminate\Support\Carbon;
 
 it('serves the tree as an svg image', function (): void {
@@ -48,20 +50,6 @@ it('lets a browser reuse an unchanged tree', function (): void {
     $this->withHeaders(['If-None-Match' => $etag])
         ->get("/tree.svg/{$unit->id}")
         ->assertStatus(304);
-});
-
-it('renames the signpost when the member is renamed', function (): void {
-    $unit = Unit::factory()->create(['title' => 'Ash']);
-
-    $first = $this->get("/sign.svg/{$unit->id}");
-    expect($first->getContent())->toContain('Ash');
-
-    $unit->update(['title' => 'Rowan']);
-
-    $second = $this->get("/sign.svg/{$unit->id}");
-
-    expect($second->getContent())->toContain('Rowan')
-        ->and($second->headers->get('etag'))->not->toBe($first->headers->get('etag'));
 });
 
 /*
@@ -146,13 +134,14 @@ it('snows on the branches as well as the leaves in winter', function (): void {
         ->toContain('.wc-trunk{filter:drop-shadow');
 });
 
-it('banks a drift against the foot of the tree in winter', function (): void {
+it('heaps snow against the foot of the tree in winter', function (): void {
     $this->travelTo(Carbon::create(2026, 1, 15));
 
-    // The drift's two layers: a cool shadow and the snow on top of it.
+    // The heap rises highest where it has banked against the trunk, over a
+    // cool shadow drawn from the same outline.
     expect($this->get('/tree.svg/'.memberWithALeaf()->id)->getContent())
-        ->toContain('fill="#dfe7ee"')
-        ->toContain('C1030,1180 656,1180 604,1158 Z" fill="#fff"');
+        ->toContain('C786,1098 806,1078 830,1076')
+        ->toContain('fill="#dfe7ee" transform="translate(0,8)"');
 });
 
 it('piles fallen leaves around the base in autumn', function (): void {
@@ -164,34 +153,98 @@ it('piles fallen leaves around the base in autumn', function (): void {
     expect(substr_count($svg, '<path d="M-13,0 L13,0"'))->toBe(20);
 });
 
-it('draws nothing on the ground in spring or summer', function (string $date): void {
-    $this->travelTo(Carbon::parse($date));
+it('grows grass round the base in spring', function (): void {
+    $this->travelTo(Carbon::create(2026, 4, 15));
 
     $svg = $this->get('/tree.svg/'.memberWithALeaf()->id)->getContent();
 
-    expect($svg)->not->toContain('M-13,0 L13,0')
-        ->and($svg)->not->toContain('#dfe7ee');
-})->with(['spring' => '2026-04-15', 'summer' => '2026-07-15']);
+    expect(substr_count($svg, 'M-3.5,0 C-3,-14'))->toBe(46)
+        // Flowers are a summer thing.
+        ->and($svg)->not->toContain('#e8b923')
+        ->and($svg)->not->toContain('#c99a12');
+});
 
-it('draws the same autumn tree on every request', function (): void {
-    // The fallen leaves are placed from a fixed list, not at random. A random
-    // scatter would give every request a new ETag, and no browser would ever
-    // be able to reuse a tree it already had.
-    $this->travelTo(Carbon::create(2026, 10, 15));
+it('puts daisies and buttercups in longer grass in summer', function (): void {
+    $this->travelTo(Carbon::create(2026, 7, 15));
+
+    $svg = $this->get('/tree.svg/'.memberWithALeaf()->id)->getContent();
+
+    // Each flower colour is used by that flower and nothing else.
+    expect(substr_count($svg, 'M-3.5,0 C-3,-14'))->toBe(58)
+        ->and(substr_count($svg, '#e8b923'))->toBe(6)   // daisy centres
+        ->and(substr_count($svg, '#c99a12'))->toBe(5);  // buttercup centres
+});
+
+it('draws the same tree on every request, whatever the season', function (string $date): void {
+    // Grass, flowers and fallen leaves are placed from fixed positions or a
+    // hash of their index, never at random. A random scatter would give every
+    // request a new ETag, and no browser could reuse a tree it already had.
+    $this->travelTo(Carbon::parse($date));
     $unit = memberWithALeaf();
 
     $first = $this->get("/tree.svg/{$unit->id}")->headers->get('etag');
     $second = $this->get("/tree.svg/{$unit->id}")->headers->get('etag');
 
     expect($second)->toBe($first);
+})->with([
+    'spring' => '2026-04-15',
+    'summer' => '2026-07-15',
+    'autumn' => '2026-10-15',
+    'winter' => '2027-01-15',
+]);
+
+it('blossoms in summer and only in summer', function (): void {
+    $renderer = app(TreeRenderer::class);
+
+    // Roughly two leaves in three carry a flower; which ones is fixed per leaf.
+    expect(substr_count($renderer->renderComplete(Season::Summer), 'wc-blossom'))->toBe(42)
+        ->and($renderer->renderComplete(Season::Spring))->not->toContain('wc-blossom')
+        ->and($renderer->renderComplete(Season::Autumn))->not->toContain('wc-blossom')
+        ->and($renderer->renderComplete(Season::Winter))->not->toContain('wc-blossom');
 });
 
-it('draws the name board without its legs', function (): void {
-    // The board is cropped at its lower edge, y=26.35 in the artwork, which
-    // keeps the descender on a name like "Amy" and drops the two posts.
-    $unit = Unit::factory()->create(['title' => 'Amy']);
+it('leaves a bare tree without blossom, even in summer', function (): void {
+    // The flowers come with the leaves a member has earned, not for nothing.
+    expect(app(TreeRenderer::class)->render(collect(), Season::Summer))
+        ->not->toContain('wc-blossom');
+});
 
-    expect($this->get("/sign.svg/{$unit->id}")->getContent())
-        ->toContain('viewBox="0 0 99 26.7"')
-        ->not->toContain('viewBox="0 0 99 60"');
+it('never positions a blossom on the group that summer grows', function (): void {
+    // Summer sets the CSS transform property on each group in the leaf layer
+    // to grow it, and a CSS transform replaces a transform attribute. A flower
+    // positioned on that group was drawn at the canvas origin, off the edge —
+    // present in the SVG, invisible on the page. Its position lives one level in.
+    $svg = app(TreeRenderer::class)->renderComplete(Season::Summer);
+
+    expect($svg)->not->toMatch('/<g class="wc-blossom"[^>]*transform=/')
+        ->and(substr_count($svg, '<g class="wc-blossom"><g transform="translate('))->toBe(42);
+});
+
+it('keeps existing blossom in place when a new leaf grows', function (): void {
+    // Each flower is decided by its own leaf's id, not its place in the list,
+    // so a child earning a leaf adds blossom rather than reshuffling it.
+    $this->travelTo(Carbon::create(2026, 7, 15));
+    $unit = memberWithALeaf();
+
+    $positions = function () use ($unit): array {
+        preg_match_all('/wc-blossom"><g transform="([^"]+)"/', $this->get("/tree.svg/{$unit->id}")->getContent(), $m);
+
+        return $m[1];
+    };
+
+    $before = $positions();
+
+    // Otherwise the comparison below would pass for nothing.
+    expect($before)->not->toBeEmpty();
+
+    $birds = Category::factory()->create(['title' => 'Birds']);
+    foreach (range(2, 6) as $month) {
+        $challenge = Challenge::factory()->create(['category_id' => $birds->id, 'month' => $month]);
+        Spotting::factory()->create(['unit_id' => $unit->id, 'challenge_id' => $challenge->id]);
+    }
+
+    $after = $positions();
+
+    expect(count($after))->toBeGreaterThan(count($before))
+        ->and(array_diff($before, $after))->toBe([]);
 });

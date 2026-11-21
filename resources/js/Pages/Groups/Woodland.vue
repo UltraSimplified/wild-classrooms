@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { Head, Link } from '@inertiajs/vue3';
 
+import NameBoard from '@/Components/NameBoard.vue';
 import SiteLayout from '@/Layouts/SiteLayout.vue';
 
 interface Member {
@@ -57,38 +58,29 @@ const props = defineProps<{
                 <li
                     v-for="member in props.members"
                     :key="member.id"
-                    class="w-40 shrink-0 text-center sm:w-48"
+                    class="min-w-40 shrink-0 text-center sm:min-w-48"
                 >
+                    <!--
+                        The tree stands on its own ground now — grass, flowers,
+                        fallen leaves or snow, depending on the season — so it
+                        can sit squarely over the name board without looking as
+                        if it is balanced on it. The card has a minimum width
+                        rather than a fixed one, so a long name widens the card
+                        instead of being cut short.
+                    -->
                     <Link
                         :href="`/tree/${member.id}/${member.slug}`"
-                        class="group block"
+                        class="group flex flex-col items-center"
                         :aria-label="`${member.title}'s tree, ${member.spottings} spottings`"
                     >
-                        <!--
-                            The name board stands at ground level in front of
-                            the tree, which is set over to the right and a
-                            little behind it. It sits low enough that the
-                            ground at the foot of the tree — fallen leaves in
-                            autumn, a drift in winter — still shows. The board
-                            is the name label, so the name is not repeated as
-                            text below. Its offsets are percentages, which CSS
-                            resolves against width, so the arrangement holds
-                            at every card size.
-                        -->
                         <img
                             :src="`/tree.svg/${member.id}`"
                             :alt="''"
                             aria-hidden="true"
-                            class="ml-auto block w-[82%]"
+                            class="block w-40 sm:w-48"
                             loading="lazy"
                         />
-                        <img
-                            :src="`/sign.svg/${member.id}`"
-                            :alt="''"
-                            aria-hidden="true"
-                            class="relative -mt-[3%] ml-[4%] block w-[56%]"
-                            loading="lazy"
-                        />
+                        <NameBoard :name="member.title" class="mt-1" />
                         <span class="text-step--1 text-ink-soft group-hover:text-leaf mt-2 block">
                             {{ member.spottings }}
                             {{ member.spottings === 1 ? 'spotting' : 'spottings' }}

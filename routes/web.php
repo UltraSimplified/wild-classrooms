@@ -63,7 +63,6 @@ Route::get('/challenges/{unit}/{month?}', [UnitController::class, 'challenges'])
 
 // The woodland artwork, served as images.
 Route::get('/tree.svg/{unit?}', [TreeController::class, 'tree'])->name('svg.tree');
-Route::get('/sign.svg/{unit}', [TreeController::class, 'sign'])->name('svg.sign');
 
 /*
 |--------------------------------------------------------------------------

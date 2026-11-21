@@ -254,6 +254,9 @@ copy has real foreign keys where production has none.
   `soved/laravel-gdpr` is installed, so it is worth a deliberate decision
   rather than an inherited one.
 - **Browser tests.** `pest-plugin-browser` is installed but unused.
-- **The woodland page makes two image requests per member** (tree and sign), so
-  a ten-member group is twenty requests. They carry a five-minute cache header;
-  inlining the SVG would remove them if it ever matters.
+- **The woodland page makes one image request per member**, for the tree. The
+  name board used to be a second per-member SVG; it is now real text on a
+  single plank image (`resources/svg/plank.svg`) shared by every board, so a
+  ten-member group went from twenty requests to ten plus one. The trees revalidate
+  with an ETag on every view; inlining the SVG would remove the requests
+  entirely if it ever matters.

@@ -72,7 +72,7 @@ final class TreeRenderer
 
         return $this->asset('tree-head.svg')
             .($style === '' ? '' : '<style>'.$style.'</style>')
-            .'<g class="wc-leaves">'.$leaves.'</g>'
+            .'<g class="wc-leaves">'.$leaves.$season->canopy($leaves).'</g>'
             .'<g class="wc-trunk">'.$this->asset('tree-tree.svg').'</g>'
             .$season->ground()
             .$this->asset('tree-foot.svg');

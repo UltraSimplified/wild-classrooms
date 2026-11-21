@@ -77,6 +77,22 @@ it('renders a group woodland with its members', function (): void {
         );
 });
 
+it('sends each member\'s whole name for their name board', function (): void {
+    // The board used to show only the first word, so every tree in a group
+    // of "Class 1" to "Class 6" read "Class". It is the only name on the card
+    // now, so it has to be the whole thing.
+    $group = Group::factory()->create();
+    Unit::factory()->create(['group_id' => $group->id, 'title' => 'Class 4']);
+    Unit::factory()->create(['group_id' => $group->id, 'title' => 'Class 5']);
+
+    $this->get(route('groups.woodland', ['group' => $group->id, 'slug' => 'x']))
+        ->assertOk()
+        ->assertInertia(fn (Assert $page) => $page
+            ->where('members.0.title', 'Class 4')
+            ->where('members.1.title', 'Class 5')
+        );
+});
+
 it('renders the dig deeper index and a post', function (): void {
     $post = Post::factory()->create(['title' => 'Winter Wildlife']);
 

@@ -6,7 +6,6 @@ namespace App\Http\Controllers;
 
 use App\Models\Spotting;
 use App\Models\Unit;
-use App\Services\Trees\SignRenderer;
 use App\Services\Trees\TreeRenderer;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
@@ -22,7 +21,6 @@ class TreeController extends Controller
 {
     public function __construct(
         private readonly TreeRenderer $trees,
-        private readonly SignRenderer $signs,
     ) {}
 
     public function tree(Request $request, ?Unit $unit = null): Response
@@ -39,11 +37,6 @@ class TreeController extends Controller
             ->get();
 
         return $this->svg($request, $this->trees->render($spottings));
-    }
-
-    public function sign(Request $request, Unit $unit): Response
-    {
-        return $this->svg($request, $this->signs->render((string) $unit->title));
     }
 
     /**
