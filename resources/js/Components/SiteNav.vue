@@ -55,9 +55,6 @@ const open = ref(false);
                 <li v-if="page.props.auth.user">
                     <Link href="/profile/edit" class="hover:text-leaf-pale">Edit group</Link>
                 </li>
-                <li v-if="page.props.auth.user?.isAdmin">
-                    <Link href="/admin/users" class="hover:text-leaf-pale">Users</Link>
-                </li>
                 <li v-if="page.props.auth.user">
                     <Link href="/logout" method="post" as="button" class="hover:text-leaf-pale">
                         Log out
@@ -98,9 +95,6 @@ const open = ref(false);
             </li>
             <li v-if="page.props.auth.user" class="py-2">
                 <Link href="/profile/edit">Edit group</Link>
-            </li>
-            <li v-if="page.props.auth.user?.isAdmin" class="py-2">
-                <Link href="/admin/users">Users</Link>
             </li>
             <li v-if="page.props.auth.user" class="py-2">
                 <Link href="/logout" method="post" as="button">Log out</Link>

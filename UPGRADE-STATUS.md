@@ -25,18 +25,22 @@ Every controller is ported and every page rebuilt in Vue:
 | Home | hero tree, this month's five, featured photos, group list |
 | Challenges | index, month, species detail (at the old `/spottings/{id}/{slug}` URL) |
 | Gallery | masonry, liking |
-| Groups | index, woodland (trees and signposts) |
+| Groups | index, woodland (trees and name boards) |
 | Members | tree, monthly challenges |
 | Spottings | add, edit, delete, photo upload |
 | Dig Deeper | index, post |
 | Onboarding | group details, members |
 | Account | group editing, Breeze profile |
-| Admin | user list, user editing |
 | Static | about, terms, cookie policy |
 
-The woodland artwork is unchanged: all 60 leaf groups, the trunk and the
-signpost were extracted verbatim from the old 659-line `TreesController` into
-`resources/svg/` and are rendered by `TreeRenderer` and `SignRenderer`.
+The woodland artwork comes from the old 659-line `TreesController`: all 60
+leaf groups and the trunk were extracted verbatim into `resources/svg/` and are
+drawn by `TreeRenderer`. The seasons are applied over that artwork rather than
+by editing it (`Season`): bigger leaves and blossom in summer, turned leaves
+in autumn, snow in winter, and grass, flowers, fallen leaves or a snow heap at
+the foot of the tree. The signpost has become a name board: the plank from
+the old artwork, without its posts (`resources/svg/plank.svg`), stretched
+behind the member's name as real text, so a long name gets a longer plank.
 
 ### Frontend
 
@@ -134,6 +138,12 @@ covered by tests in `tests/Feature/AuthorizationTest.php`.
 - **FontAwesome Pro from a CDN** — a paid licence loaded client-side on every
   page. The new pages use no icon font.
 - **The third-party cookie-reporting script** on the cookie policy page.
+- **The front-end user admin** (`/admin/users`). User accounts are managed in
+  Nova, by the staff `NOVA_ADMIN_EMAILS` lets in. Its policy had defined only
+  what the front-end pages needed, and Nova refuses any ability a policy leaves
+  out, so until this change Nova would list users but not open, edit or create
+  one. The `admin` and `member` roles are no longer read by anything; they can
+  be dropped once nobody needs the history.
 
 ## Before this goes live: repair the text encoding
 
@@ -206,8 +216,8 @@ copy has real foreign keys where production has none.
   Maps key is the one entry that can be **revoked outright** rather than
   replaced: since the move to Leaflet nothing in this application asks for it,
   so there is no working value to put back.
-- **Set the new env values**: `NOVA_ADMIN_EMAILS`, `STAFF_NOTIFICATION_EMAILS`,
-  `LETTR_API_KEY`.
+- **Set the new env values**: `STAFF_NOTIFICATION_EMAILS`, `LETTR_API_KEY`.
+  (`NOVA_ADMIN_EMAILS` is set on the server.)
 - **Set `APP_URL` to the real hostname.** The public disk derives its URL from
   it (`rtrim(env('APP_URL', 'http://localhost'), '/').'/storage'`), and Nova's
   `Image` fields render *absolute* URLs from that disk. Leave it unset and

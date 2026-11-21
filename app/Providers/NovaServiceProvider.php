@@ -24,15 +24,22 @@ class NovaServiceProvider extends NovaApplicationServiceProvider
     }
 
     /**
-     * Who may reach Nova outside local.
+     * Who counts as staff: the people Nova lets in.
      *
      * The old provider hardcoded two staff email addresses in the source. With
      * the repository going public those belong in configuration, not in code.
+     *
+     * Nova itself admits anyone signed in when running locally, whatever this
+     * gate says. The local case is repeated here so that the gate means the
+     * same thing as Nova does: policies defer to it, and without it the Users
+     * screen would vanish in local development while every other screen
+     * stayed.
      */
     protected function gate(): void
     {
         Gate::define('viewNova', function (User $user): bool {
-            return in_array($user->email, config('nova.admin_emails', []), true);
+            return app()->environment('local')
+                || in_array($user->email, config('nova.admin_emails', []), true);
         });
     }
 

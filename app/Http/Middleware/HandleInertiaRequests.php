@@ -38,7 +38,6 @@ class HandleInertiaRequests extends Middleware
                     'id' => $user->getKey(),
                     'name' => $user->name,
                     'email' => $user->email,
-                    'isAdmin' => $user->hasRole('admin'),
                 ],
                 'group' => $group === null ? null : [
                     'id' => $group->getKey(),

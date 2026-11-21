@@ -92,24 +92,6 @@ it('will not let a user edit or delete another group\'s spotting', function (): 
     expect(Spotting::find($spotting->id))->not->toBeNull();
 });
 
-it('keeps the admin area to admins', function (): void {
-    $member = User::factory()->create();
-    $admin = User::factory()->create();
-    $admin->roles()->create(['name' => 'admin']);
-
-    $this->actingAs($member)->get('/admin/users')->assertForbidden();
-    $this->actingAs($admin)->get('/admin/users')->assertOk();
-});
-
-it('refuses to let an admin delete their own account from the admin area', function (): void {
-    $admin = User::factory()->create();
-    $admin->roles()->create(['name' => 'admin']);
-
-    $this->actingAs($admin)->delete("/admin/users/{$admin->id}")->assertForbidden();
-
-    expect(User::find($admin->id))->not->toBeNull();
-});
-
 it('rejects an oversized or non-image upload', function (): void {
     $owner = User::factory()->create();
     $group = Group::factory()->create(['owner_id' => $owner->id]);
@@ -132,5 +114,4 @@ it('requires a sign-in for the pages that change things', function (): void {
     $this->get('/spottings/add')->assertRedirect('/login');
     $this->get('/profile/edit')->assertRedirect('/login');
     $this->get("/spottings/edit/{$spotting->id}")->assertRedirect('/login');
-    $this->get('/admin/users')->assertRedirect('/login');
 });
