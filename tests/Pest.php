@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
@@ -17,3 +18,20 @@ use Tests\TestCase;
 pest()->extend(TestCase::class)
     ->use(RefreshDatabase::class)
     ->in('Feature', 'Unit');
+
+/*
+|--------------------------------------------------------------------------
+| Helpers
+|--------------------------------------------------------------------------
+*/
+
+/**
+ * A user Nova lets in outside the local environment.
+ */
+function staff(): User
+{
+    $user = User::factory()->create();
+    config(['nova.admin_emails' => [$user->email]]);
+
+    return $user;
+}

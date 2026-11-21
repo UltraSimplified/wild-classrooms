@@ -77,3 +77,18 @@ it('accepts plain numbers as well as rationals', function (): void {
     expect($result['latitude'])->not->toBeNull()
         ->and((float) $result['latitude'])->toBeGreaterThan(51.74);
 });
+
+it('finds the GPS tags in EXIF grouped by section, as Intervention reads it', function (): void {
+    $result = $this->gps->extract([
+        'IFD0' => ['Make' => 'Phone'],
+        'GPS' => [
+            'GPSLatitude' => ['51/1', '44/1', '40/1'],
+            'GPSLatitudeRef' => 'N',
+            'GPSLongitude' => ['2/1', '13/1', '1/1'],
+            'GPSLongitudeRef' => 'W',
+        ],
+    ]);
+
+    expect((float) $result['latitude'])->toBeGreaterThan(51.74)->toBeLessThan(51.75)
+        ->and((float) $result['longitude'])->toBeGreaterThan(-2.22)->toBeLessThan(-2.21);
+});

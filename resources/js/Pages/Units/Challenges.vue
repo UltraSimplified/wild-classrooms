@@ -4,6 +4,7 @@ import { computed } from 'vue';
 
 import CategoryProgress from '@/Components/CategoryProgress.vue';
 import SpeciesCard from '@/Components/SpeciesCard.vue';
+import { useScrollReveal } from '@/composables/useScrollReveal';
 import SiteLayout from '@/Layouts/SiteLayout.vue';
 
 const props = defineProps<{
@@ -28,6 +29,9 @@ const abbreviation = computed(() =>
 );
 
 const spottedCategories = computed(() => props.spotted[abbreviation.value] ?? {});
+
+// Cards fade in a row at a time as they scroll into view.
+const { container: speciesGrid } = useScrollReveal();
 </script>
 
 <template>
@@ -51,7 +55,7 @@ const spottedCategories = computed(() => props.spotted[abbreviation.value] ?? {}
                 </p>
             </div>
 
-            <div class="grid gap-5 sm:grid-cols-2 md:col-span-3 lg:grid-cols-3">
+            <div ref="speciesGrid" class="grid gap-5 sm:grid-cols-2 md:col-span-3 lg:grid-cols-3">
                 <SpeciesCard
                     v-for="challenge in props.challenges"
                     :key="challenge.id"

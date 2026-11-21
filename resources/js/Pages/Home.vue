@@ -4,8 +4,9 @@ import { computed, reactive } from 'vue';
 
 import MediaImage from '@/Components/MediaImage.vue';
 import SpeciesCard from '@/Components/SpeciesCard.vue';
+import { useScrollReveal } from '@/composables/useScrollReveal';
 import SiteLayout from '@/Layouts/SiteLayout.vue';
-import type { PageProps } from '@/types';
+import type { ImageSize, PageProps } from '@/types';
 
 interface Challenge {
     id: number;
@@ -19,6 +20,7 @@ interface Challenge {
 interface Featured {
     id: number;
     picture: string | null;
+    size: ImageSize | null;
     notes: string | null;
     comment: string | null;
     challenge: string | null;
@@ -57,6 +59,10 @@ const heroTreeAlt = computed(() =>
         ? 'Your woodland tree, with a leaf for every species spotted'
         : 'A tree after a full year of spotting, carrying all sixty leaves',
 );
+
+// Cards fade in a row at a time as they scroll into view.
+const { container: thisMonthGrid } = useScrollReveal();
+const { container: featuredGrid } = useScrollReveal();
 </script>
 
 <template>
@@ -119,7 +125,7 @@ const heroTreeAlt = computed(() =>
                 {{ page.props.currentMonth.name }} — five to find
             </h2>
 
-            <div class="mt-6 grid gap-5 sm:grid-cols-2 lg:grid-cols-5">
+            <div ref="thisMonthGrid" class="mt-6 grid gap-5 sm:grid-cols-2 lg:grid-cols-5">
                 <SpeciesCard
                     v-for="challenge in thisMonth"
                     :key="challenge.id"
@@ -133,7 +139,10 @@ const heroTreeAlt = computed(() =>
                 Spotted by the groups
             </h2>
 
-            <div class="mt-6 columns-2 gap-4 md:columns-3 lg:columns-4 [&>*]:mb-4">
+            <div
+                ref="featuredGrid"
+                class="mt-6 columns-2 gap-4 md:columns-3 lg:columns-4 [&>*]:mb-4"
+            >
                 <Link
                     v-for="spotting in props.featured"
                     v-show="!missing.has(spotting.id)"
@@ -143,6 +152,7 @@ const heroTreeAlt = computed(() =>
                 >
                     <MediaImage
                         :src="spotting.picture"
+                        :size="spotting.size"
                         :alt="spotting.challenge ?? 'A spotting'"
                         class="border-bark/30 w-full border"
                         @missing="missing.add(spotting.id)"

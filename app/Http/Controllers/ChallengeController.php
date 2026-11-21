@@ -6,6 +6,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Challenge;
 use App\Models\Spotting;
+use App\Support\MediaSize;
 use App\Support\MediaUrl;
 use Illuminate\Support\Collection;
 use Inertia\Inertia;
@@ -90,6 +91,7 @@ class ChallengeController extends Controller
                 ->map(fn (Spotting $spotting): array => [
                     'id' => $spotting->getKey(),
                     'picture' => MediaUrl::resolve($spotting->picture),
+                    'size' => MediaSize::of($spotting->picture),
                     'notes' => $spotting->notes,
                     'comment' => $spotting->comment,
                     'location' => $spotting->location,

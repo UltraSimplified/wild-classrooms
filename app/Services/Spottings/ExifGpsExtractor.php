@@ -28,6 +28,14 @@ final class ExifGpsExtractor
             return $none;
         }
 
+        // Intervention v4 reads EXIF grouped by section, with these tags under
+        // "GPS". Looking for them at the top level, as exif_read_data lays them
+        // out without sections, found nothing, so no upload since the port had
+        // been given a location.
+        if (is_array($exif['GPS'] ?? null)) {
+            $exif = $exif['GPS'];
+        }
+
         $latitude = $this->toDecimal($exif['GPSLatitude'] ?? null);
         $longitude = $this->toDecimal($exif['GPSLongitude'] ?? null);
 

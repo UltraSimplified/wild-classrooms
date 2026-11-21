@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Nova;
 
+use App\Nova\Fields\WebpImage;
 use App\Nova\Metrics\SpottingsPerDay;
 use Laravel\Nova\Card;
 use Laravel\Nova\Fields\BelongsTo;
@@ -11,7 +12,6 @@ use Laravel\Nova\Fields\Boolean;
 use Laravel\Nova\Fields\Date;
 use Laravel\Nova\Fields\Field;
 use Laravel\Nova\Fields\ID;
-use Laravel\Nova\Fields\Image;
 use Laravel\Nova\Fields\Text;
 use Laravel\Nova\Fields\Textarea;
 use Laravel\Nova\Http\Requests\NovaRequest;
@@ -44,7 +44,7 @@ class Spotting extends Resource
                 fn ($value) => $value?->format('d M Y')
             )->sortable(),
             Boolean::make('Featured', 'featured')->sortable(),
-            Image::make('Picture', 'picture'),
+            WebpImage::make('Picture', 'picture'),
             BelongsTo::make('Member', 'unit', Unit::class)->rules('required'),
             BelongsTo::make('Challenge', 'challenge'),
             Textarea::make('Notes'),

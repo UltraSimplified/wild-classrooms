@@ -6,8 +6,9 @@ import AdjacentSpecies from '@/Components/AdjacentSpecies.vue';
 import MediaImage from '@/Components/MediaImage.vue';
 import SpottingMap from '@/Components/SpottingMap.vue';
 import SpottingPhoto from '@/Components/SpottingPhoto.vue';
+import { useScrollReveal } from '@/composables/useScrollReveal';
 import SiteLayout from '@/Layouts/SiteLayout.vue';
-import type { MapPoint, PageProps, SpeciesLink } from '@/types';
+import type { ImageSize, MapPoint, PageProps, SpeciesLink } from '@/types';
 
 interface Challenge {
     id: number;
@@ -28,6 +29,7 @@ const props = defineProps<{
     spottings: {
         id: number;
         picture: string | null;
+        size: ImageSize | null;
         notes: string | null;
         comment: string | null;
         location: string | null;
@@ -57,6 +59,9 @@ const monthName = computed((): string | null =>
         ? new Date(2000, props.challenge.month - 1, 1).toLocaleString('en-GB', { month: 'long' })
         : null,
 );
+
+// Cards fade in a row at a time as they scroll into view.
+const { container: spottingsGrid } = useScrollReveal();
 </script>
 
 <template>
@@ -130,7 +135,7 @@ const monthName = computed((): string | null =>
             <h2 class="u-display text-step-2 border-bark/30 border-b pb-2">
                 Spotted by other groups
             </h2>
-            <div class="mt-6 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+            <div ref="spottingsGrid" class="mt-6 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
                 <SpottingPhoto
                     v-for="spotting in props.spottings"
                     :key="spotting.id"

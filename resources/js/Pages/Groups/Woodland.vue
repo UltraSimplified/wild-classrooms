@@ -2,6 +2,7 @@
 import { Head, Link } from '@inertiajs/vue3';
 
 import NameBoard from '@/Components/NameBoard.vue';
+import { useScrollReveal } from '@/composables/useScrollReveal';
 import SiteLayout from '@/Layouts/SiteLayout.vue';
 
 interface Member {
@@ -25,6 +26,9 @@ const props = defineProps<{
     members: Member[];
     isMyGroup: boolean;
 }>();
+
+// Cards fade in a row at a time as they scroll into view.
+const { container: woodland } = useScrollReveal();
 </script>
 
 <template>
@@ -54,7 +58,10 @@ const props = defineProps<{
                 {{ props.members.length === 1 ? 'One tree' : `${props.members.length} trees` }}
             </h2>
 
-            <ul class="mt-8 flex flex-wrap items-end justify-center gap-x-2 gap-y-10">
+            <ul
+                ref="woodland"
+                class="mt-8 flex flex-wrap items-end justify-center gap-x-2 gap-y-10"
+            >
                 <li
                     v-for="member in props.members"
                     :key="member.id"
@@ -77,6 +84,8 @@ const props = defineProps<{
                             :src="`/tree.svg/${member.id}`"
                             :alt="''"
                             aria-hidden="true"
+                            width="881"
+                            height="1181"
                             class="block w-40 sm:w-48"
                             loading="lazy"
                         />

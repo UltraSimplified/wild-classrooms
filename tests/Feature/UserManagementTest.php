@@ -15,14 +15,6 @@ use Illuminate\Support\Facades\Gate;
  * wrong in the other direction, which is exactly how that was first missed.
  */
 
-function staff(): User
-{
-    $user = User::factory()->create();
-    config(['nova.admin_emails' => [$user->email]]);
-
-    return $user;
-}
-
 it('lets Nova staff list users and open one', function (): void {
     $staff = staff();
     $user = User::factory()->create();

@@ -1,8 +1,10 @@
 <script setup lang="ts">
 import MediaImage from '@/Components/MediaImage.vue';
+import type { ImageSize } from '@/types';
 
 const props = defineProps<{
     picture?: string | null;
+    size?: ImageSize | null;
     notes?: string | null;
     comment?: string | null;
     challenge?: string | null;
@@ -15,6 +17,7 @@ const props = defineProps<{
     <figure class="border-bark/30 bg-parchment-deep/40 border">
         <MediaImage
             :src="props.picture"
+            :size="props.size"
             :alt="props.challenge ?? 'A spotting'"
             class="w-full object-cover"
         />

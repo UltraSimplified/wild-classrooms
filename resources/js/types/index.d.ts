@@ -33,6 +33,12 @@ export interface PageProps {
     [key: string]: unknown;
 }
 
+/** A stored image's pixel size, so its space can be held before it loads. */
+export interface ImageSize {
+    width: number;
+    height: number;
+}
+
 export interface MapPoint {
     id: number;
     latitude: number;

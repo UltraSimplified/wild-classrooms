@@ -2,6 +2,7 @@
 import { Head } from '@inertiajs/vue3';
 
 import SpeciesCard from '@/Components/SpeciesCard.vue';
+import { useScrollReveal } from '@/composables/useScrollReveal';
 import SiteLayout from '@/Layouts/SiteLayout.vue';
 
 interface Challenge {
@@ -15,6 +16,10 @@ interface Challenge {
 }
 
 defineProps<{ past: Challenge[]; upcoming: Challenge[]; currentMonth: number }>();
+
+// Cards fade in a row at a time as they scroll into view.
+const { container: pastGrid } = useScrollReveal();
+const { container: upcomingGrid } = useScrollReveal();
 </script>
 
 <template>
@@ -26,7 +31,7 @@ defineProps<{ past: Challenge[]; upcoming: Challenge[]; currentMonth: number }>(
     >
         <section>
             <h2 class="u-display text-step-2 border-bark/30 border-b pb-2">Out now</h2>
-            <div class="mt-6 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+            <div ref="pastGrid" class="mt-6 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
                 <SpeciesCard v-for="challenge in past" :key="challenge.id" v-bind="challenge" />
             </div>
         </section>
@@ -35,7 +40,7 @@ defineProps<{ past: Challenge[]; upcoming: Challenge[]; currentMonth: number }>(
             <h2 class="u-display text-step-2 border-bark/30 border-b pb-2">
                 Still to come this year
             </h2>
-            <div class="mt-6 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+            <div ref="upcomingGrid" class="mt-6 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
                 <SpeciesCard v-for="challenge in upcoming" :key="challenge.id" v-bind="challenge" />
             </div>
         </section>

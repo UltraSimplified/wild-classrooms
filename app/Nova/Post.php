@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace App\Nova;
 
+use App\Nova\Fields\WebpImage;
 use Laravel\Nova\Fields\BelongsTo;
 use Laravel\Nova\Fields\Date;
 use Laravel\Nova\Fields\Field;
 use Laravel\Nova\Fields\ID;
-use Laravel\Nova\Fields\Image;
 use Laravel\Nova\Fields\Text;
 use Laravel\Nova\Fields\Trix;
 use Laravel\Nova\Http\Requests\NovaRequest;
@@ -42,7 +42,7 @@ class Post extends Resource
             Date::make('Date posted', 'post_date')->rules('required'),
             BelongsTo::make('Category', 'category')->sortable(),
             BelongsTo::make('Challenge', 'challenge')->nullable()->sortable(),
-            Image::make('Featured image', 'featured_image')->disk('public'),
+            WebpImage::make('Featured image', 'featured_image')->disk('public'),
             Trix::make('Teaser', 'intro')->rules('required'),
             Trix::make('Content', 'content')->rules('required'),
             BelongsTo::make('Author', 'author', User::class)->rules('required'),

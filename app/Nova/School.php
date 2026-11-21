@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace App\Nova;
 
+use App\Nova\Fields\WebpImage;
 use Illuminate\Http\Resources\MergeValue;
 use Laravel\Nova\Fields\Field;
 use Laravel\Nova\Fields\ID;
-use Laravel\Nova\Fields\Image;
 use Laravel\Nova\Fields\Text;
 use Laravel\Nova\Fields\Trix;
 use Laravel\Nova\Http\Requests\NovaRequest;
@@ -36,8 +36,8 @@ class School extends Resource
         return [
             ID::make()->sortable()->hideFromDetail(),
             Text::make('School')->sortable()->rules('required'),
-            Image::make('Logo', 'logo')->disk('public'),
-            Image::make('Featured image', 'featured_image')->disk('public'),
+            WebpImage::make('Logo', 'logo')->disk('public'),
+            WebpImage::make('Featured image', 'featured_image')->disk('public'),
             Trix::make('Statement', 'statement')->rules('required'),
             Text::make('Head teacher', 'head')->rules('required'),
             // Nova has no first-party colour field; a hex value as text keeps

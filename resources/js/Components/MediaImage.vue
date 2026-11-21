@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import { ref, watch } from 'vue';
 
+import type { ImageSize } from '@/types';
+
 /*
  * A photo whose file is missing.
  *
@@ -18,8 +20,12 @@ const props = withDefaults(
         src?: string | null;
         alt?: string | null;
         loading?: 'lazy' | 'eager';
+        // The file's own size. With these the browser holds the image's
+        // space open before it arrives, instead of laying it out at zero
+        // height and shifting everything below once it loads.
+        size?: ImageSize | null;
     }>(),
-    { src: null, alt: null, loading: 'lazy' },
+    { src: null, alt: null, loading: 'lazy', size: null },
 );
 
 const emit = defineEmits<{ missing: [] }>();
@@ -42,6 +48,8 @@ watch(
         :src="props.src"
         :alt="props.alt ?? ''"
         :loading="props.loading"
+        :width="props.size?.width"
+        :height="props.size?.height"
         @error="
             failed = true;
             emit('missing');

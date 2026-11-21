@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace App\Nova;
 
+use App\Nova\Fields\WebpImage;
 use Illuminate\Http\Resources\MergeValue;
 use Laravel\Nova\Fields\Boolean;
 use Laravel\Nova\Fields\Field;
 use Laravel\Nova\Fields\ID;
-use Laravel\Nova\Fields\Image;
 use Laravel\Nova\Fields\Select;
 use Laravel\Nova\Fields\Text;
 use Laravel\Nova\Fields\Trix;
@@ -41,7 +41,7 @@ class Group extends Resource
                 'School' => 'School',
                 'Other' => 'Other',
             ])->displayUsingLabels(),
-            Image::make('Image', 'image')->disk('public'),
+            WebpImage::make('Image', 'image')->disk('public'),
             Trix::make('Description', 'description'),
             Boolean::make('Public', 'public'),
             $this->addressFields(),

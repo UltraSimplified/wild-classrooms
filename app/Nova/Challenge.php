@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace App\Nova;
 
+use App\Nova\Fields\WebpImage;
 use Laravel\Nova\Fields\BelongsTo;
 use Laravel\Nova\Fields\Field;
 use Laravel\Nova\Fields\ID;
-use Laravel\Nova\Fields\Image;
 use Laravel\Nova\Fields\Select;
 use Laravel\Nova\Fields\Text;
 use Laravel\Nova\Fields\Textarea;
@@ -55,7 +55,7 @@ class Challenge extends Resource
             BelongsTo::make('Category', 'category')->sortable(),
             Trix::make('Description'),
             Textarea::make('Where to find them', 'where_to_find_them'),
-            Image::make('Image', 'image')->disk('public'),
+            WebpImage::make('Image', 'image')->disk('public'),
             Text::make('Credit'),
         ];
     }

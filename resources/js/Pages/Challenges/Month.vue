@@ -3,6 +3,7 @@ import { Head, Link } from '@inertiajs/vue3';
 import { computed } from 'vue';
 
 import SpeciesCard from '@/Components/SpeciesCard.vue';
+import { useScrollReveal } from '@/composables/useScrollReveal';
 import SiteLayout from '@/Layouts/SiteLayout.vue';
 
 interface Challenge {
@@ -21,6 +22,9 @@ const previous = computed(() => (props.month === 1 ? 12 : props.month - 1));
 const next = computed(() => (props.month === 12 ? 1 : props.month + 1));
 const nameOfMonth = (m: number) =>
     new Date(2000, m - 1, 1).toLocaleString('en-GB', { month: 'long' });
+
+// Cards fade in a row at a time as they scroll into view.
+const { container: speciesGrid } = useScrollReveal();
 </script>
 
 <template>
@@ -30,7 +34,7 @@ const nameOfMonth = (m: number) =>
         :title="`${props.monthName} — five to find`"
         lede="Go and look for these. Tick off whatever you see, and add a photo or a drawing if you like."
     >
-        <div class="mt-2 grid gap-5 sm:grid-cols-2 lg:grid-cols-5">
+        <div ref="speciesGrid" class="mt-2 grid gap-5 sm:grid-cols-2 lg:grid-cols-5">
             <SpeciesCard
                 v-for="challenge in props.challenges"
                 :key="challenge.id"

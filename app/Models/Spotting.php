@@ -20,6 +20,7 @@ use Maize\Markable\Models\Like;
  * here under a distinct name.
  *
  * @property-read int|null $markable_likes_count populated by withCount()
+ * @property-read bool|null $liked_by_viewer populated by withExists() in the gallery
  */
 class Spotting extends Model
 {

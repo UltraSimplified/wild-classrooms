@@ -8,7 +8,7 @@ page rebuilt on Inertia 2 + Vue 3.
 ### Framework and admin
 
 - **Laravel 13.43** on the modern `bootstrap/app.php` skeleton.
-- **Nova 5.11** with all 9 resources, 3 metrics and the dashboard ported.
+- **Nova 5.12** with all 9 resources, 3 metrics and the dashboard ported.
   `Place` fields became `Text`: Nova dropped `Place` when Algolia Places shut
   down, which is what the old `ALGOLIA_*` keys were for.
 - **Models** moved to `app/Models` with typed relations, `casts()` and
@@ -56,10 +56,18 @@ Lettr is the transport. All three mailables were rewritten to
 Envelope/Content, and the user is now passed in rather than read from `Auth`
 inside the view, which a queued job cannot do.
 
+### Uploads
+
+Every image is stored as WebP, whichever way it arrives: the spotting and
+group forms, and Nova's image fields (`App\Nova\Fields\WebpImage`).
+`WebpConverter` turns it upright, shrinks it to fit (1200px for spottings,
+800px for groups, 2400px in Nova) and strips its metadata. The images already
+on disk are converted by a command; see below.
+
 ### Quality
 
 Pest, Larastan level 5, Sloppy, Rector, Pint, Prettier, ESLint. All green:
-79 tests, no PHPStan errors, Sloppy 100/100, no baseline entries anywhere.
+141 tests, no PHPStan errors, Sloppy 100/100, no baseline entries anywhere.
 
 ## Security fixes made during the port
 
@@ -94,6 +102,10 @@ covered by tests in `tests/Feature/AuthorizationTest.php`.
   so one set of notifications was going nowhere. Now `STAFF_NOTIFICATION_EMAILS`.
 - **Nova admin emails were hardcoded** in `NovaServiceProvider`. Now
   `NOVA_ADMIN_EMAILS`; an empty value admits nobody.
+- **Nova stored uploads untouched**, EXIF and all, so a photo added there
+  could carry the GPS position it was taken at, in a public directory. Every
+  upload is now re-encoded with its metadata stripped. Nova also never checked
+  on the server that a file was an image; an SVG or PDF is now refused.
 
 ## Other bugs fixed
 
@@ -121,6 +133,10 @@ covered by tests in `tests/Feature/AuthorizationTest.php`.
 - EXIF GPS parsing was duplicated between create and edit and the two copies
   had drifted, so the same photo could yield a location on one path and not
   the other. A `0/0` denominator divided by zero.
+- No uploaded photo had been given a location since the port. Intervention v4
+  groups EXIF by section, with the GPS tags under `GPS`, and the extractor
+  looked for them at the top level. Any spotting uploaded through the new site
+  before the fix has no coordinates, though its `exif` column still holds them.
 - Image URLs were resolved three different ways across the old templates; the
   home page asked for `/storage//uploads/...`, which did not load. `MediaUrl`
   resolves all three stored formats in one place.
@@ -189,6 +205,31 @@ So:
 
 Either way the characters are wrong in the live database today, so the repair
 is still worth running there.
+
+## Then: convert the stored images to WebP
+
+New uploads are stored as WebP; this converts the 626 images already there,
+which also takes the old site's photos out of public reach with their EXIF:
+25 of the 807 JPEGs in the local copy still carry the GPS position they were
+taken at.
+
+Run it **after** the encoding repair. Until that has run, the Old Man's Beard
+filename does not match its file, so this would report it as not found and
+leave it.
+
+```bash
+php artisan app:convert-images-to-webp --dry-run   # report
+php artisan app:convert-images-to-webp             # apply
+```
+
+Each image is written beside the original, its record is pointed at it, and
+the original is moved, not deleted, to `storage/app/private/webp-originals`
+with a `manifest.csv` of every change, so any of it can be put back. Add `-v`
+to list anything it could not convert; those records are left as they were.
+Safe to run more than once.
+
+Against the local copy of the data the dry run found and could read all 626:
+40.4 MB down to 17.3 MB, in about twelve seconds.
 
 ## The local database
 

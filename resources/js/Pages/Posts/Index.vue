@@ -2,6 +2,7 @@
 import { Head, Link } from '@inertiajs/vue3';
 
 import MediaImage from '@/Components/MediaImage.vue';
+import { useScrollReveal } from '@/composables/useScrollReveal';
 import SiteLayout from '@/Layouts/SiteLayout.vue';
 
 defineProps<{
@@ -16,13 +17,16 @@ defineProps<{
         author: string | null;
     }[];
 }>();
+
+// Cards fade in a row at a time as they scroll into view.
+const { container: postsGrid } = useScrollReveal();
 </script>
 
 <template>
     <Head title="Dig deeper" />
 
     <SiteLayout title="Dig deeper" lede="Longer reads about the wildlife on the challenges.">
-        <div class="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
+        <div ref="postsGrid" class="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
             <article v-for="post in posts" :key="post.id" class="border-bark/30 border">
                 <Link :href="`/dig-deeper/view/${post.id}/${post.slug}`">
                     <MediaImage
